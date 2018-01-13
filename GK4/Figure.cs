@@ -6,17 +6,8 @@ using System.Threading.Tasks;
 
 namespace GK4
 {
-    class Cylinder
+    public abstract class Figure
     {
         public Triangle[] triangles;
-
-        public Cylinder(int pieces)
-        {
-            if(pieces<4)
-                throw new ArgumentException();
-
-
-        }
-
     }
 }

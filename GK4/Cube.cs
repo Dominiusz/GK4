@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GK4
 {
-    class Cube
+    class Cube:Figure
     {
-        public Triangle[] triangles;
+        //public Triangle[] triangles;
 
         public Cube()
         {

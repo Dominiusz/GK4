@@ -29,11 +29,11 @@ namespace GK4
             G.Clear(Color.Black);
             G.Dispose();
 
-           // using (Graphics gfx = Graphics.FromImage(pictureBox1.Image))
-           // using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 0, 0)))
-           // {
-           //     gfx.Clear(Color.Black);
-           // }
+            // using (Graphics gfx = Graphics.FromImage(pictureBox1.Image))
+            // using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 0, 0)))
+            // {
+            //     gfx.Clear(Color.Black);
+            // }
 
         }
 
@@ -41,12 +41,12 @@ namespace GK4
         {
             if (pictureBox1.Image != null)
             {
-                Bitmap B = (Bitmap) pictureBox1.Image;
+                Bitmap B = (Bitmap)pictureBox1.Image;
                 for (int i = 0; i < B.Width; i++)
                 {
                     for (int j = 0; j < B.Height; j++)
                     {
-                        B.SetPixel(i,j,Color.Black);
+                        B.SetPixel(i, j, Color.Black);
                     }
                 }
             }
@@ -55,20 +55,23 @@ namespace GK4
         private void button1_Click(object sender, EventArgs e)
         {
             Camera cam = new Camera();
-            cam.Position = new Vector(3, 3, 0.5f);
+            cam.Position = new Vector(0.2f, 3.2f, 1);
+            cam.Target = new Vector(0, 0, 0);
+            cam.UpWorld= new Vector(0,0,1);
             Cube cube = new Cube();
+            Cone cone = new Cone(16);
 
-            Render(cube,cam);
+            Render(cone, cam);
         }
 
-        private void Render(Cube cube,Camera cam)
+        private void Render(Figure figure, Camera cam)
         {
             Vector position = cam.Position;
             Vector target = cam.Target;
             Vector upWorld = cam.UpWorld;
             Vector D = position - target;
-            Vector R = Vector.CrossProduct( upWorld,D);
-            Vector U = Vector.CrossProduct( D,R);
+            Vector R = Vector.CrossProduct(D,upWorld);
+            Vector U = Vector.CrossProduct(D, R);
 
             D.Normalize();
             R.Normalize();
@@ -103,29 +106,31 @@ namespace GK4
 
             Proj[0, 0] = e;
             Proj[1, 1] = e / aspect;
-            Proj[2, 2] = -(f + n) / (f - n);
-            Proj[3, 2] = -1;
+            Proj[2, 2] = (f + n) / (f - n);
+            Proj[3, 2] = 1;
             Proj[2, 3] = (-2 * f * n) / (f - n);
 
-            foreach (var T in cube.triangles)
-            {
-                Vector vt11 = Matrix.Multiply(View, T[0]);
-                Vector vt12 = Matrix.Multiply(View, T[1]);
-                Vector vt13 = Matrix.Multiply(View, T[2]);
+            Matrix PVM = Matrix.Multiply(Proj, View);
 
-                Vector pt11 = Matrix.Multiply(Proj, vt11);
-                Vector pt12 = Matrix.Multiply(Proj, vt12);
-                Vector pt13 = Matrix.Multiply(Proj, vt13);
+            foreach (var T in figure.triangles)
+            {
+                //Vector vt11 = Matrix.Multiply(View, T[0]);
+                //Vector vt12 = Matrix.Multiply(View, T[1]);
+                //Vector vt13 = Matrix.Multiply(View, T[2]);
+
+                Vector pt11 = Matrix.Multiply(PVM, T[0]);
+                Vector pt12 = Matrix.Multiply(PVM, T[1]);
+                Vector pt13 = Matrix.Multiply(PVM, T[2]);
 
                 int W = pictureBox1.Width;
                 int H = pictureBox1.Height;
 
                 float t11x = pt11[0] / pt11[3];
                 float t11y = pt11[1] / pt11[3];
-                                            
+
                 float t12x = pt12[0] / pt12[3];
                 float t12y = pt12[1] / pt12[3];
-                                            
+
                 float t13x = pt13[0] / pt13[3];
                 float t13y = pt13[1] / pt13[3];
 
@@ -148,11 +153,11 @@ namespace GK4
                 G.Dispose();
 
 
-               //using (Graphics gfx = Graphics.FromImage(pictureBox1.Image))
-               //using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 0, 255)))
-               //{
-               //    gfx.FillPolygon(brush,list.ToArray());
-               //}
+                //using (Graphics gfx = Graphics.FromImage(pictureBox1.Image))
+                //using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 0, 255)))
+                //{
+                //    gfx.FillPolygon(brush,list.ToArray());
+                //}
             }
 
 
@@ -166,7 +171,7 @@ namespace GK4
 
             Triangle t1 = new Triangle(-1, 1, far, 1, 1, far, 1, -1, near);
 
-            Vector position = new Vector(0,1,0);
+            Vector position = new Vector(0, 1, 0);
             Vector target = new Vector(0, 0.5f, 0.5f);
             Vector upWorld = new Vector(0, 1, 0);
             Vector D = position - target;
@@ -251,7 +256,7 @@ namespace GK4
 
         private void pictureBox1_ClientSizeChanged(object sender, EventArgs e)
         {
-           // FillSceneBlack();
+            // FillSceneBlack();
         }
 
 

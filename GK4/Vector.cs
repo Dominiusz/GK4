@@ -9,7 +9,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace GK4
 {
-    class Vector
+    public class Vector
     {
         private readonly float[] table;
 
