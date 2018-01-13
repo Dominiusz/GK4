@@ -62,10 +62,11 @@ namespace GK4
                 normal2.Normalize();
                 triangles[i + 4 * pieces] = new Triangle(top, Base[i + 1], Base[i], up, normal1, normal2);
             }
-            Vector n1 = new Vector(Base[Base.Count - 1][0], Base[Base.Count - 1][1], 1, 0);
-            Vector n2 = new Vector(Base[0][0], Base[0][1], 1, 0);
+           
+            Vector n1 = new Vector(Base[0][0], Base[0][1], 1, 0);
+            Vector n2 = new Vector(Base[Base.Count - 1][0], Base[Base.Count - 1][1], 1, 0);
 
-            triangles[8 * pieces - 1] = new Triangle(top, Base[Base.Count - 1], Base[0], up, n1, n2);
+            triangles[8 * pieces - 1] = new Triangle(top, Base[0], Base[Base.Count - 1], up, n1, n2);
 
         }
 

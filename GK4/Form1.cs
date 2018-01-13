@@ -62,13 +62,14 @@ namespace GK4
         private void button1_Click(object sender, EventArgs e)
         {
             Camera cam = new Camera();
-            cam.Position = new Vector(0.2f, 3.2f, 1);
-            cam.Target = new Vector(0, 0, 0);
+            cam.Position = new Vector(2, 2, 0.5f);
+            cam.Target = new Vector(0, 0, 0.5f);
             cam.UpWorld= new Vector(0,0,1);
             Cube cube = new Cube();
             Cone cone = new Cone(16);
+            Cylinder cylinder = new Cylinder(80);
 
-            Render(cone, cam);
+            Render(cylinder, cam);
         }
 
         private Matrix GetProjectionMatrix(float _near, float _far, float _fov, float _aspect)
