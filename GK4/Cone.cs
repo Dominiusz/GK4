@@ -65,6 +65,8 @@ namespace GK4
            
             Vector n1 = new Vector(Base[0][0], Base[0][1], 1, 0);
             Vector n2 = new Vector(Base[Base.Count - 1][0], Base[Base.Count - 1][1], 1, 0);
+            n1.Normalize();
+            n2.Normalize();
 
             triangles[8 * pieces - 1] = new Triangle(top, Base[0], Base[Base.Count - 1], up, n1, n2);
 
