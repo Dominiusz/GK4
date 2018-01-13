@@ -14,7 +14,7 @@ namespace GK4
 
         public Light()
         {
-            Position = new Vector(0, 0, 2);
+            Position = new Vector(0, 0, 5);
             Colour = Color.FromArgb(255, 255, 255);
         }
 
