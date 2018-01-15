@@ -116,6 +116,19 @@ namespace GK4
             return ret;
         }
 
+        public static float DotProduct(Vector v1, Vector v2)
+        {
+            if (v1.Rank != v2.Rank)
+                throw new ArgumentException();
+            float ret = 0;
+
+            for (int i = 0; i < v1.Rank; i++)
+            {
+                ret = ret + v1.table[i] * v2.table[i];
+            }
+            return ret;
+        }
+
         public static Vector operator +(Vector v1, Vector v2)
         {
             if (v1.Rank != v2.Rank || v1.IsVertical != v2.IsVertical)
@@ -137,6 +150,18 @@ namespace GK4
             for (int i = 0; i < v1.Rank; i++)
             {
                 ret.table[i] = v1.table[i] - v2.table[i];
+            }
+            return ret;
+        }
+
+        public static Vector operator /(Vector v, float n)
+        {
+            if (Math.Abs(n) < 0.00001)
+                throw new ArgumentException();
+            Vector ret = new Vector(v);
+            for (int i = 0; i < v.Rank; i++)
+            {
+                ret.table[i] = v.table[i] / n;
             }
             return ret;
         }

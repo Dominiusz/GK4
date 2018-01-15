@@ -24,7 +24,7 @@ namespace GK4
             InitializeComponent();
             FillSceneBlack();
             Triangle t = new Triangle(1, 1, 1, 1, 1, 1, 1, 1, 1);
-            
+
         }
 
         private void FillSceneBlack()
@@ -64,12 +64,12 @@ namespace GK4
             Camera cam = new Camera();
             cam.Position = new Vector(2, 2, 0.5f);
             cam.Target = new Vector(0, 0, 0.5f);
-            cam.UpWorld= new Vector(0,0,1);
+            cam.UpWorld = new Vector(0, 0, 1);
             Cube cube = new Cube();
             Cone cone = new Cone(16);
-            Cylinder cylinder = new Cylinder(80);
+            Cylinder cylinder = new Cylinder(40);
 
-            Render(cylinder, cam);
+            Render(cone, cam);
         }
 
         private Matrix GetProjectionMatrix(float _near, float _far, float _fov, float _aspect)
@@ -98,6 +98,15 @@ namespace GK4
                 Vector v1 = Matrix.Multiply(PVM, T[0]);
                 Vector v2 = Matrix.Multiply(PVM, T[1]);
                 Vector v3 = Matrix.Multiply(PVM, T[2]);
+
+                //Vector n1 = Matrix.Multiply(PVM, T.normals[0]);
+
+               // if (Vector.DotProduct(v1 - cam.Position, n1) < 0)
+               //     continue;
+
+                //Vector N = Vector.CrossProduct((v2-v1),(v3-v1));
+                //if(Vector.DotProduct(v1,N)<0)
+                //    continue;
 
                 int W = pictureBox1.Width;
                 int H = pictureBox1.Height;
