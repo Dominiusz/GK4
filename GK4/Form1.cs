@@ -69,7 +69,7 @@ namespace GK4
             Cone cone = new Cone(16);
             Cylinder cylinder = new Cylinder(40);
 
-            Render(cone, cam);
+            Render(cube, cam);
         }
 
         private Matrix GetProjectionMatrix(float _near, float _far, float _fov, float _aspect)
