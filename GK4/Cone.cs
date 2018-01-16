@@ -56,9 +56,9 @@ namespace GK4
 
             for (int i = 0; i < Base.Count - 1; i++)
             {
-                Vector normal1 = new Vector(Base[i + 1][0], 1, Base[i + 1][1], 0);
-                Vector normal2 = new Vector(Base[i][0], 1, Base[i][1], 0);
-                Vector normalUp = new Vector((Base[i][0] + Base[i + 1][0]) / 2, 1, (Base[i][1] + Base[i + 1][1]) / 2, 0);
+                Vector normal1 = new Vector(Base[i + 1][0], 1, Base[i + 1][2], 0);
+                Vector normal2 = new Vector(Base[i][0], 1, Base[i][2], 0);
+                Vector normalUp = new Vector((Base[i][0] + Base[i + 1][0]) / 2, 1, (Base[i][2] + Base[i + 1][2]) / 2, 0);
 
                 normal1.Normalize();
                 normal2.Normalize();
@@ -66,9 +66,9 @@ namespace GK4
                 triangles[i + 4 * pieces] = new Triangle(top, Base[i + 1], Base[i], normalUp, normal1, normal2);
             }
 
-            Vector n1 = new Vector(Base[0][0], 1, Base[0][1], 0);
-            Vector n2 = new Vector(Base[Base.Count - 1][0], 1, Base[Base.Count - 1][1], 0);
-            Vector nUp = new Vector((Base[0][0] + Base[Base.Count - 1][0]) / 2, 1, (Base[0][1] + Base[Base.Count - 1][1]) / 2, 0);
+            Vector n1 = new Vector(Base[0][0], 1, Base[0][2], 0);
+            Vector n2 = new Vector(Base[Base.Count - 1][0], 1, Base[Base.Count - 1][2], 0);
+            Vector nUp = new Vector((Base[0][0] + Base[Base.Count - 1][0]) / 2, 1, (Base[0][2] + Base[Base.Count - 1][2]) / 2, 0);
             n1.Normalize();
             n2.Normalize();
             nUp.Normalize();
