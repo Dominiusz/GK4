@@ -11,7 +11,7 @@ namespace GK4
 {
     public class Vector
     {
-        private readonly float[] table;
+        private float[] table;
 
         public int Rank => table.Length;
 
@@ -171,6 +171,25 @@ namespace GK4
             if (Rank != 1)
                 throw new ArgumentException();
             return table[0];
+        }
+
+        public Vector Get3Vector()
+        {
+            Vector ret = new Vector(3);
+            ret.table[0] = table[0];
+            ret.table[1] = table[1];
+            ret.table[2] = table[2];
+            return ret;
+        }
+
+        public Vector To3Vector()
+        {
+            float[] newTable= new float[3];
+            newTable[0] = table[0];
+            newTable[1] = table[1];
+            newTable[2] = table[2];
+            table = newTable;
+            return this;
         }
 
         public override string ToString()

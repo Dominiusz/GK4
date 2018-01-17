@@ -30,18 +30,18 @@ namespace GK4
         private void FillSceneBlack()
         {
             if (pictureBox1.Image == null)
+            {
                 pictureBox1.Image = new Bitmap(pictureBox1.Size.Width, Size.Height);
+            }
 
-            Graphics G = pictureBox1.CreateGraphics();
-            G.Clear(Color.Black);
-            G.Dispose();
-
-            // using (Graphics gfx = Graphics.FromImage(pictureBox1.Image))
-            // using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 0, 0)))
-            // {
-            //     gfx.Clear(Color.Black);
-            // }
-
+            Bitmap B = (Bitmap)pictureBox1.Image;
+            for (int i = 0; i < B.Width; i++)
+            {
+                for (int j = 0; j < B.Height; j++)
+                {
+                    B.SetPixel(i, j, Color.Black);
+                }
+            }
         }
 
         private void FillSceneBlack1()
@@ -62,14 +62,17 @@ namespace GK4
         private void button1_Click(object sender, EventArgs e)
         {
             Camera cam = new Camera();
-            cam.Position = new Vector(3,3 , 1);
+            cam.Position = new Vector(3, 3, 2);
             cam.Target = new Vector(0, 0.5f, 0);
             cam.UpWorld = new Vector(0, 1, 0);
             Cube cube = new Cube();
             Cone cone = new Cone(16);
             Cylinder cylinder = new Cylinder(40);
 
-            Render(cylinder, cam);
+
+            Render(cone, cam);
+
+
         }
 
         private Matrix GetProjectionMatrix(float _near, float _far, float _fov, float _aspect)
@@ -101,8 +104,8 @@ namespace GK4
 
                 //Vector n1 = Matrix.Multiply(PVM, T.normals[0]);
 
-               // if (Vector.DotProduct(v1 - cam.Position, n1) < 0)
-               //     continue;
+                // if (Vector.DotProduct(v1 - cam.Position, n1) < 0)
+                //     continue;
 
                 //Vector N = Vector.CrossProduct((v2-v1),(v3-v1));
                 //if(Vector.DotProduct(v1,N)<0)
@@ -227,11 +230,118 @@ namespace GK4
 
         }
 
-        private void pictureBox1_ClientSizeChanged(object sender, EventArgs e)
+        public void MyDrawLine(ref Bitmap B, Point p1, Point p2, Color color)
         {
-            // FillSceneBlack();
+            // zmienne pomocnicze
+            int x1 = p1.X, y1 = p1.Y, x2 = p2.X, y2 = p2.Y;
+            int d, dx, dy, ai, bi, xi, yi;
+            int x = x1, y = y1;
+
+            // ustalenie kierunku rysowania
+            if (x1 < x2)
+            {
+                xi = 1;
+                dx = x2 - x1;
+            }
+            else
+            {
+                xi = -1;
+                dx = x1 - x2;
+            }
+            // ustalenie kierunku rysowania
+            if (y1 < y2)
+            {
+                yi = 1;
+                dy = y2 - y1;
+            }
+            else
+            {
+                yi = -1;
+                dy = y1 - y2;
+            }
+            // pierwszy piksel
+
+            B.SetPixel(x,y,color);
+           
+            // oś wiodąca OX
+            if (dx > dy)
+            {
+                ai = (dy - dx) * 2;
+                bi = dy * 2;
+                d = bi - dx;
+                // pętla po kolejnych x
+                while (x != x2)
+                {
+                    // test współczynnika
+                    if (d >= 0)
+                    {
+                        x += xi;
+                        y += yi;
+                        d += ai;
+                    }
+                    else
+                    {
+                        d += bi;
+                        x += xi;
+                    }
+                    B.SetPixel(x,y,color);
+                }
+            }
+            // oś wiodąca OY
+            else
+            {
+                ai = (dx - dy) * 2;
+                bi = dx * 2;
+                d = bi - dy;
+                // pętla po kolejnych y
+                while (y != y2)
+                {
+                    // test współczynnika
+                    if (d >= 0)
+                    {
+                        x += xi;
+                        y += yi;
+                        d += ai;
+                    }
+                    else
+                    {
+                        d += bi;
+                        y += yi;
+                    }
+                    B.SetPixel(x, y, color);
+                }
+            }
         }
 
+        private void SwapBitmaps(ref Bitmap b1, ref Bitmap b2)
+        {
+            Bitmap tmp = b1;
+            b1 = b2;
+            b2 = tmp;
+        }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Bitmap B = pictureBox1.Image   as Bitmap;
+            
+            for (int i = 0; i < 400; i++)
+            {
+                MyDrawLine(ref B,  new Point(i,i), new Point(550,i), Color.White);
+            }
+            for (int i = 0; i < 400; i++)
+            {
+                MyDrawLine(ref B, new Point(i, i), new Point(550, i), Color.Red);
+            }
+            for (int i = 0; i < 400; i++)
+            {
+                MyDrawLine(ref B, new Point(i, i), new Point(550, i), Color.Blue);
+            }
+            for (int i = 0; i < 400; i++)
+            {
+                MyDrawLine(ref B, new Point(i, i), new Point(550, i), Color.Green);
+            }
+
+            pictureBox1.Image = B;
+        }
     }
 }
