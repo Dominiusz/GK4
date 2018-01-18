@@ -12,9 +12,17 @@ namespace GK4
 
         public Cube()
         {
+            Xtranslation = 0;
+            Xscale = 1;
+            Xturn = 0;
+            Ytranslation = 0;
+            Yscale = 1;
+            Yturn = 0;
+            Ztranslation = 0;
+            Zscale = 1;
+            Zturn = 0;
+
             triangles = new Triangle[12];
-
-
 
             triangles[0] = new Triangle(0, 0, 0, 1, 0, 0, 0, 0, 1);
             triangles[0].normals = new Vector[] { new Vector(0, 0, -1, 0), new Vector(0, 0, -1, 0), new Vector(0, 0, -1, 0) };

@@ -13,8 +13,18 @@ namespace GK4
         {
             if (pieces < 4)
                 throw new ArgumentException();
-            double Pi = Math.PI;
 
+            Xtranslation = 0;
+            Xscale = 1;
+            Xturn = 0;
+            Ytranslation = 0;
+            Yscale = 1;
+            Yturn = 0;
+            Ztranslation = 0;
+            Zscale = 1;
+            Zturn = 0;
+
+            double Pi = Math.PI;
             pieces /= 4;
 
             Vector center = new Vector(0, 0, 0, 1);
