@@ -20,14 +20,21 @@ namespace GK4
         float f = 100f;
         float fov = 45;
         float aspect = 1;
+        private float ambient = 0.5f;
+        private float diffuse = 0.5f;
+        private float specular = 0.5f;
+        private float shiness = 32;
+        Light light = new Light();
+
         private float[,] ZBuffer;
         private Triangle T;
-        Camera cam= new Camera();
+        private Camera cam = new Camera();
 
         public Form1()
         {
             InitializeComponent();
             FillSceneBlack();
+
         }
 
         private void FillSceneBlack()
@@ -65,28 +72,28 @@ namespace GK4
 
         private void button1_Click(object sender, EventArgs e)
         {
-           // cam = new Camera();
-           // cam.Position = new Vector(3, 2.5f, 1.5f);
-           pictureBox1.CreateGraphics().Clear(Color.Black);
-            cam.Target = new Vector(0, 0.5f, 0);
+            // cam = new Camera();
+            cam.Position = new Vector(0, 0.5f, 1,1);
+            pictureBox1.CreateGraphics().Clear(Color.Black);
+            cam.Target = new Vector(0, 0.5f, 0, 1);
             cam.UpWorld = new Vector(0, 1, 0);
             Cube cube = new Cube();
             Cone cone = new Cone(16);
             Cylinder cylinder = new Cylinder(40);
 
-            Render(cube, cam);
+            Render(cone, cam);
 
 
         }
 
         private Matrix GetProjectionMatrix(float _near, float _far, float _fov, float _aspect)
         {
-            float e = 1 / (float)(Math.Tan(_fov * Math.PI / 180 / 2));
+            float e = 1 / (float)Math.Tan(_fov * Math.PI / 180 / 2);
 
             Matrix Proj = new Matrix(4);
 
-            Proj[0, 0] = e;
-            Proj[1, 1] = e / _aspect;
+            Proj[0, 0] = e / _aspect; 
+            Proj[1, 1] = e;
             Proj[2, 2] = (_far + _near) / (_far - _near);
             Proj[3, 2] = 1;
             Proj[2, 3] = (-2 * _far * _near) / (_far - _near);
@@ -94,20 +101,48 @@ namespace GK4
             return Proj;
         }
 
-        private void Render(Figure figure, Camera cam)
+        private void Render(Figure figure, Camera _cam)
         {
 
-            Matrix View = cam.GetViewMatrix();
+            Matrix View = _cam.GetViewMatrix();
             Matrix Proj = GetProjectionMatrix(n, f, fov, aspect);
             Matrix PVM = Matrix.Multiply(Proj, View);
             Bitmap B = pictureBox1.Image as Bitmap;
+
+
+            var M = ModelTransformations.GetTranslationMatrix(1f, 0.5f, -3);
+            PVM = Matrix.Multiply(PVM,M);
+            
+
             foreach (var T in figure.triangles)
             {
+                
+            
+
+
                 Vector v1 = Matrix.Multiply(PVM, T[0]);
                 Vector v2 = Matrix.Multiply(PVM, T[1]);
                 Vector v3 = Matrix.Multiply(PVM, T[2]);
 
-                //Vector n1 = Matrix.Multiply(PVM, T.normals[0]);
+                Vector n1 = Matrix.Multiply(PVM, T.normals[0]);
+                Vector n2 = Matrix.Multiply(PVM, T.normals[1]);
+                Vector n3 = Matrix.Multiply(PVM, T.normals[2]);
+
+                n1.Normalize();
+                n2.Normalize();
+                n3.Normalize();
+
+                float distance = CalculateDistance(T[0], cam.Position);
+                Vector toLightVersor = (light.Position - T[0]).Normalize();
+                Vector toObserver = (cam.Position - T[0]).Normalize();
+
+                Color triangleColor = CalculateColor(toLightVersor, T.normals[0].Normalize(), toObserver, distance);
+
+
+
+
+
+
 
                 // if (Vector.DotProduct(v1 - cam.Position, n1) < 0)
                 //     continue;
@@ -137,22 +172,53 @@ namespace GK4
                 list.Add(new PointF(v1x, v1y));
                 list.Add(new PointF(v2x, v2y));
                 list.Add(new PointF(v3x, v3y));
-                
-               // Graphics G = pictureBox1.CreateGraphics();
-               // G.FillPolygon(Brushes.Blue, list.ToArray());
-               // G.Dispose();
-                
-              //  Pen p = new Pen(Color.Blue, 1);
-             //   Graphics G = pictureBox1.CreateGraphics();
-              //  G.DrawPolygon(p, list.ToArray());
-              //  G.Dispose();
 
-                FillTriangle(ref B, new Triangle(v1x, v1y, 0, v2x, v2y, 0, v3x, v3y, 0), Color.Aqua);
-           //     MyDrawLine(ref B, (int)v1x, (int)v1y, (int)v2x, (int)v2y, Color.BlueViolet);
-           //     MyDrawLine(ref B, (int)v2x, (int)v2y, (int)v3x, (int)v3y, Color.BlueViolet);
-           //     MyDrawLine(ref B, (int)v3x, (int)v3y, (int)v1x, (int)v1y, Color.BlueViolet);               
+                // Graphics G = pictureBox1.CreateGraphics();
+                // G.FillPolygon(Brushes.Blue, list.ToArray());
+                // G.Dispose();
+
+                //  Pen p = new Pen(Color.Blue, 1);
+                //   Graphics G = pictureBox1.CreateGraphics();
+                //  G.DrawPolygon(p, list.ToArray());
+                //  G.Dispose();
+
+                FillTriangle(ref B, new Triangle(v1x, v1y, 0, v2x, v2y, 0, v3x, v3y, 0), triangleColor);
+                //     MyDrawLine(ref B, (int)v1x, (int)v1y, (int)v2x, (int)v2y, Color.BlueViolet);
+                //     MyDrawLine(ref B, (int)v2x, (int)v2y, (int)v3x, (int)v3y, Color.BlueViolet);
+                //     MyDrawLine(ref B, (int)v3x, (int)v3y, (int)v1x, (int)v1y, Color.BlueViolet);               
             }
             pictureBox1.Image = B;
+        }
+
+        private Color CalculateColor(Vector toLightVersor, Vector normal, Vector toObserver, float distance)
+        {
+            int R = light.Colour.R;
+            int G = light.Colour.G;
+            int B = light.Colour.B;
+
+            float L1N = Vector.DotProduct(toLightVersor, normal);
+            float RV = Vector.DotProduct(2 * L1N * (normal - toLightVersor), toObserver);
+            float att = GetAttenuation(distance);
+
+            R = (int)(ambient * R + ((diffuse * L1N) * R + specular * (float)Math.Pow(RV, shiness) * R) * att);
+            G = (int)(ambient * G + ((diffuse * L1N) * G + specular * (float)Math.Pow(RV, shiness) * G) * att);
+            B = (int)(ambient * B + ((diffuse * L1N) * B + specular * (float)Math.Pow(RV, shiness) * B) * att);
+
+            R = Math.Min(Math.Max(0, R), 255);
+            G = Math.Min(Math.Max(0, G), 255);
+            B = Math.Min(Math.Max(0, B), 255);
+
+            return Color.FromArgb(R, G, B);
+        }
+
+        private float CalculateDistance(Vector v1, Vector v2)
+        {
+            float ret = 0f;
+            for (int i = 0; i < 3; i++)
+            {
+                ret += (v1[i] - v2[i]) * (v1[i] - v2[i]);
+            }
+            return (float)Math.Sqrt(ret);
         }
 
         private void button2_Click(object sender, EventArgs ea)
@@ -190,7 +256,7 @@ namespace GK4
             x2f = sorted[1][0];
             y2f = sorted[1][1];
             x3f = sorted[2][0];
-            y3f = sorted[2][1];         
+            y3f = sorted[2][1];
 
             int y1 = (int)y1f;
             int y2 = (int)y2f;
@@ -239,14 +305,14 @@ namespace GK4
 
             for (int i = y1; i <= y2; i++)
             {
-              //  for (int j = (int)curr1; j <= (int)curr2; j++)
-              //  {
-                   // if (j < -1000)
-                   //     break;
-                  //  if (j > -1 && i > -1 && j < B.Width && i < B.Height)
-                   //     B.SetPixel(j, i, C);
-                    MyDrawLine(ref B, (int)curr1, i, (int)curr2, i, C);
-              //  }
+                for (int j = (int)curr1; j <= (int)curr2; j++)
+                {
+                    if (j < -1000)
+                        break;
+                    if (j > -1 && i > -1 && j < B.Width && i < B.Height)
+                        B.SetPixel(j, i, C);
+                    //MyDrawLine(ref B, (int)curr1, i, (int)curr2, i, C);
+                }
                 curr1 += dy1;
                 curr2 += dy2;
             }
@@ -273,13 +339,13 @@ namespace GK4
 
             for (int i = y3; i > y1; i--)
             {
-              //  for (int j = (int)curr1; j <= (int)curr2; j++)
+                for (int j = (int)curr1; j <= (int)curr2; j++)
                 {
-                  //  if (j < -1000)
-                  //      break;
-                  //  if (j > -1 && i > -1 && j < B.Width && i < B.Height)
-              //          B.SetPixel(j, i, C);
-                     MyDrawLine(ref B,(int)curr1,i,(int)curr2,i,C);
+                       if (j < -1000)
+                          break;
+                    if (j > -1 && i > -1 && j < B.Width && i < B.Height)
+                        B.SetPixel(j, i, C);
+                    //  MyDrawLine(ref B,(int)curr1,i,(int)curr2,i,C);
                 }
                 curr1 -= dy1;
                 curr2 -= dy2;
@@ -381,7 +447,26 @@ namespace GK4
 
         private void button3_Click(object sender, EventArgs e)
         {
-;
+            Matrix A = new Matrix(3);
+            Matrix B= new Matrix(3);
+
+            for (int i = 0; i < 9; i++)
+            {
+                A[i / 3, i % 3] = i * 5;
+                B[i / 3, i % 3] = i * 3;
+            }
+
+            B[2,  2] =  373;
+
+            MessageBox.Show(Matrix.Multiply(A, B).ToString());
+            MessageBox.Show(Matrix.Multiply(B,A).ToString());
+
+
+        }
+
+        private float GetAttenuation(float distance)
+        {
+            return 1f / (1 + 0.09f * distance + 0.032f * distance * distance);
         }
 
         private void pictureBox1_SizeChanged(object sender, EventArgs e)

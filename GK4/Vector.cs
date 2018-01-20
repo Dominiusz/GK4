@@ -105,8 +105,8 @@ namespace GK4
 
         public static Vector CrossProduct(Vector v1, Vector v2)
         {
-            if (v1.Rank != 3 || v2.Rank != 3)
-                throw new ArgumentException();
+            //if (v1.Rank != 3 || v2.Rank != 3)
+            //    throw new ArgumentException();
             Vector ret = new Vector(3);
 
             ret.table[0] = v1.table[1] * v2.table[2] - v1.table[2] * v2.table[1];
@@ -120,7 +120,7 @@ namespace GK4
         {
             if (v1.Rank != v2.Rank)
                 throw new ArgumentException();
-            float ret = 0;
+            float ret = 0f;
 
             for (int i = 0; i < v1.Rank; i++)
             {
@@ -150,6 +150,16 @@ namespace GK4
             for (int i = 0; i < v1.Rank; i++)
             {
                 ret.table[i] = v1.table[i] - v2.table[i];
+            }
+            return ret;
+        }
+
+        public static Vector operator *(float n, Vector v)
+        {
+            Vector ret = new Vector(v);
+            for (int i = 0; i < v.Rank; i++)
+            {
+                ret.table[i] = v.table[i] * n;
             }
             return ret;
         }
