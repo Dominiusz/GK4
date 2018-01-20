@@ -34,6 +34,7 @@ namespace GK4
         {
             InitializeComponent();
             FillSceneBlack();
+            light.Position=new Vector(2,1,0,1);
 
         }
 
@@ -73,7 +74,7 @@ namespace GK4
         private void button1_Click(object sender, EventArgs e)
         {
             // cam = new Camera();
-            cam.Position = new Vector(0, 0.5f, 1,1);
+            cam.Position = new Vector(0.1f, 1.5f, 3f, 1);
             pictureBox1.CreateGraphics().Clear(Color.Black);
             cam.Target = new Vector(0, 0.5f, 0, 1);
             cam.UpWorld = new Vector(0, 1, 0);
@@ -92,7 +93,7 @@ namespace GK4
 
             Matrix Proj = new Matrix(4);
 
-            Proj[0, 0] = e / _aspect; 
+            Proj[0, 0] = e / _aspect;
             Proj[1, 1] = e;
             Proj[2, 2] = (_far + _near) / (_far - _near);
             Proj[3, 2] = 1;
@@ -110,16 +111,12 @@ namespace GK4
             Bitmap B = pictureBox1.Image as Bitmap;
 
 
-            var M = ModelTransformations.GetTranslationMatrix(1f, 0.5f, -3);
-            PVM = Matrix.Multiply(PVM,M);
-            
+            //var M = ModelTransformations.GetTranslationMatrix(1f, 0.5f, -3);
+            //PVM = Matrix.Multiply(PVM, M);
+
 
             foreach (var T in figure.triangles)
-            {
-                
-            
-
-
+            { 
                 Vector v1 = Matrix.Multiply(PVM, T[0]);
                 Vector v2 = Matrix.Multiply(PVM, T[1]);
                 Vector v3 = Matrix.Multiply(PVM, T[2]);
@@ -132,17 +129,11 @@ namespace GK4
                 n2.Normalize();
                 n3.Normalize();
 
-                float distance = CalculateDistance(T[0], cam.Position);
+                float distance = CalculateDistance3D(T[0], cam.Position);
                 Vector toLightVersor = (light.Position - T[0]).Normalize();
                 Vector toObserver = (cam.Position - T[0]).Normalize();
 
                 Color triangleColor = CalculateColor(toLightVersor, T.normals[0].Normalize(), toObserver, distance);
-
-
-
-
-
-
 
                 // if (Vector.DotProduct(v1 - cam.Position, n1) < 0)
                 //     continue;
@@ -156,23 +147,29 @@ namespace GK4
 
                 float v1x = v1[0] / v1[3];
                 float v1y = v1[1] / v1[3];
+                float v1z = v1[2] / v1[3];
                 float v2x = v2[0] / v2[3];
                 float v2y = v2[1] / v2[3];
+                float v2z = v2[2] / v2[3];
                 float v3x = v3[0] / v3[3];
                 float v3y = v3[1] / v3[3];
+                float v3z = v3[2] / v3[3];
 
                 v1x = (v1x + 1) * W / 2;
                 v1y = -(v1y - 1) * H / 2;
+                v1z = (v1z + 1) / 2;
                 v2x = (v2x + 1) * W / 2;
                 v2y = -(v2y - 1) * H / 2;
+                v2z = (v2z + 1) / 2;
                 v3x = (v3x + 1) * W / 2;
                 v3y = -(v3y - 1) * H / 2;
+                v3z = (v3z + 1) / 2;
 
-                List<PointF> list = new List<PointF>();
-                list.Add(new PointF(v1x, v1y));
-                list.Add(new PointF(v2x, v2y));
-                list.Add(new PointF(v3x, v3y));
-
+                /*       List<PointF> list = new List<PointF>();
+                       list.Add(new PointF(v1x, v1y));
+                       list.Add(new PointF(v2x, v2y));
+                       list.Add(new PointF(v3x, v3y));
+                */
                 // Graphics G = pictureBox1.CreateGraphics();
                 // G.FillPolygon(Brushes.Blue, list.ToArray());
                 // G.Dispose();
@@ -182,7 +179,7 @@ namespace GK4
                 //  G.DrawPolygon(p, list.ToArray());
                 //  G.Dispose();
 
-                FillTriangle(ref B, new Triangle(v1x, v1y, 0, v2x, v2y, 0, v3x, v3y, 0), triangleColor);
+                FillTriangle(ref B, new Triangle(v1x, v1y, v1z, v2x, v2y, v2z, v3x, v3y, v3z), triangleColor);
                 //     MyDrawLine(ref B, (int)v1x, (int)v1y, (int)v2x, (int)v2y, Color.BlueViolet);
                 //     MyDrawLine(ref B, (int)v2x, (int)v2y, (int)v3x, (int)v3y, Color.BlueViolet);
                 //     MyDrawLine(ref B, (int)v3x, (int)v3y, (int)v1x, (int)v1y, Color.BlueViolet);               
@@ -211,7 +208,7 @@ namespace GK4
             return Color.FromArgb(R, G, B);
         }
 
-        private float CalculateDistance(Vector v1, Vector v2)
+        private float CalculateDistance3D(Vector v1, Vector v2)
         {
             float ret = 0f;
             for (int i = 0; i < 3; i++)
@@ -243,7 +240,7 @@ namespace GK4
 
         public void FillTriangle(ref Bitmap B, Triangle T, Color C)
         {
-            float x1f, y1f, x2f, y2f, x3f, y3f;
+            float x1f, y1f, x2f, y2f, x3f, y3f, z1f, z2f, z3f;
 
             List<Vector> sorted = new List<Vector>();
             sorted.Add(T[0]);
@@ -253,10 +250,15 @@ namespace GK4
 
             x1f = sorted[0][0];
             y1f = sorted[0][1];
+            z1f = sorted[0][2];
+
             x2f = sorted[1][0];
             y2f = sorted[1][1];
+            z2f = sorted[1][2];
+
             x3f = sorted[2][0];
             y3f = sorted[2][1];
+            z3f = sorted[2][2];
 
             int y1 = (int)y1f;
             int y2 = (int)y2f;
@@ -267,24 +269,26 @@ namespace GK4
 
             int x4 = (int)(x1f + (y2f - y1f) / (y3f - y1f) * (x3f - x1f));
             int y4 = (int)y2f;
+            float q = CalculateDistance2D(x1, y1, x4, y4) / CalculateDistance2D(x1, y1, x3, y3);
+            float z4f = z1f * (1 - q) + z3f * q;
 
             if (y2 == y3)
             {
-                FillBottomFlatTriangle(ref B, C, x1, y1, x2, y2, x3, y3);
+                FillBottomFlatTriangle(ref B, C, x1, y1, z1f, x2, y2, z2f, x3, y3, z3f);
             }
             else if (y1 == y2)
             {
-                FillTopFlatTriangle(ref B, C, x1, y1, x2, y2, x3, y3);
+                FillTopFlatTriangle(ref B, C, x1, y1, z1f, x2, y2, z2f, x3, y3, z3f);
             }
             else
             {
 
-                FillBottomFlatTriangle(ref B, C, x1, y1, x2, y2, x4, y4);
-                FillTopFlatTriangle(ref B, C, x2, y2, x4, y4, x3, y3);
+                FillBottomFlatTriangle(ref B, C, x1, y1, z1f, x2, y2, z2f, x4, y4, z4f);
+                FillTopFlatTriangle(ref B, C, x2, y2, z2f, x4, y4, z4f, x3, y3, z4f);
             }
         }
 
-        public void FillBottomFlatTriangle(ref Bitmap B, Color C, int x1, int y1, int x2, int y2, int x3, int y3)
+        public void FillBottomFlatTriangle(ref Bitmap B, Color C, int x1, int y1, float z1f, int x2, int y2, float z2f, int x3, int y3, float z3f)
         {
             if (x2 > x3)
             {
@@ -294,8 +298,10 @@ namespace GK4
                 tmp = y2;
                 y2 = y3;
                 y3 = tmp;
+                float tmpf = z2f;
+                z2f = z3f;
+                z3f = tmpf;
             }
-
 
             double dy1 = (double)(x2 - x1) / (y2 - y1);
             double dy2 = (double)(x3 - x1) / (y3 - y1);
@@ -303,22 +309,40 @@ namespace GK4
             double curr1 = x1;
             double curr2 = x1;
 
+            float currZ1; //= z1f;
+            float currZ2; //= z2f;
+            float Z;
+
             for (int i = y1; i <= y2; i++)
             {
+                float q = CalculateDistance2D((int)curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x2, y2);
+                currZ1 = z1f * (1 - q) + z2f * q;
+                q = CalculateDistance2D((int)curr2, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
+                currZ2 = z1f * (1 - q) + z3f * q;
+
                 for (int j = (int)curr1; j <= (int)curr2; j++)
                 {
                     if (j < -1000)
+                    {
+                  //      if (Math.Abs(curr1) > 3000)
+                  //          return;
                         break;
-                    if (j > -1 && i > -1 && j < B.Width && i < B.Height)
+                        
+                    }
+                    q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
+                    Z = currZ1 * (1 - q) + currZ2 * q;
+                    if (j > -1 && i > -1 && j < B.Width && i < B.Height && Z > ZBuffer[j, i])
+                    {
+                        ZBuffer[j, i] = Z;
                         B.SetPixel(j, i, C);
-                    //MyDrawLine(ref B, (int)curr1, i, (int)curr2, i, C);
+                    } //MyDrawLine(ref B, (int)curr1, i, (int)curr2, i, C);
                 }
                 curr1 += dy1;
                 curr2 += dy2;
             }
         }
 
-        public void FillTopFlatTriangle(ref Bitmap B, Color C, int x1, int y1, int x2, int y2, int x3, int y3)
+        public void FillTopFlatTriangle(ref Bitmap B, Color C, int x1, int y1, float z1f, int x2, int y2, float z2f, int x3, int y3, float z3f)
         {
             if (x1 > x2)
             {
@@ -328,8 +352,10 @@ namespace GK4
                 tmp = y1;
                 y1 = y2;
                 y2 = tmp;
+                float tmpf = z1f;
+                z1f = z2f;
+                z2f = tmpf;
             }
-
 
             double dy1 = (double)(x3 - x1) / (y3 - y1);
             double dy2 = (double)(x3 - x2) / (y3 - y2);
@@ -337,15 +363,32 @@ namespace GK4
             double curr1 = x3;
             double curr2 = x3;
 
+            float currZ1;
+            float currZ2;
+            float Z;
+
             for (int i = y3; i > y1; i--)
             {
+                float q = CalculateDistance2D((int)curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
+                currZ1 = z3f * (1 - q) + z1f * q;
+                q = CalculateDistance2D((int)curr2, i, x3, y3) / CalculateDistance2D(x2, y2, x3, y3);
+                currZ2 = z3f * (1 - q) + z2f * q;
+
                 for (int j = (int)curr1; j <= (int)curr2; j++)
                 {
-                       if (j < -1000)
-                          break;
-                    if (j > -1 && i > -1 && j < B.Width && i < B.Height)
+                    q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
+                    Z = currZ1 * (1 - q) + currZ2 * q;
+                    if (j < -1000)
+                    {
+                     //   if (Math.Abs(curr1) > 3000)
+                     //       return;
+                        break;
+                    }
+                    if (j > -1 && i > -1 && j < B.Width && i < B.Height && Z > ZBuffer[j, i])
+                    {
+                        ZBuffer[j, i] = Z;
                         B.SetPixel(j, i, C);
-                    //  MyDrawLine(ref B,(int)curr1,i,(int)curr2,i,C);
+                    } //  MyDrawLine(ref B,(int)curr1,i,(int)curr2,i,C);
                 }
                 curr1 -= dy1;
                 curr2 -= dy2;
@@ -438,6 +481,11 @@ namespace GK4
             }
         }
 
+        private float CalculateDistance2D(int x1, int y1, int x2, int y2)
+        {
+            return (float)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+        }
+
         private void SwapBitmaps(ref Bitmap b1, ref Bitmap b2)
         {
             Bitmap tmp = b1;
@@ -448,7 +496,7 @@ namespace GK4
         private void button3_Click(object sender, EventArgs e)
         {
             Matrix A = new Matrix(3);
-            Matrix B= new Matrix(3);
+            Matrix B = new Matrix(3);
 
             for (int i = 0; i < 9; i++)
             {
@@ -456,10 +504,10 @@ namespace GK4
                 B[i / 3, i % 3] = i * 3;
             }
 
-            B[2,  2] =  373;
+            B[2, 2] = 373;
 
             MessageBox.Show(Matrix.Multiply(A, B).ToString());
-            MessageBox.Show(Matrix.Multiply(B,A).ToString());
+            MessageBox.Show(Matrix.Multiply(B, A).ToString());
 
 
         }
