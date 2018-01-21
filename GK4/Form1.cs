@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Deployment.Application;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -25,6 +26,7 @@ namespace GK4
         private float specular = 0.5f;
         private float shiness = 32;
         Light light = new Light();
+        private int XXX = 0;
 
         private float[,] ZBuffer;
         private Triangle T;
@@ -34,7 +36,7 @@ namespace GK4
         {
             InitializeComponent();
             FillSceneBlack();
-            light.Position=new Vector(2,1,0,1);
+            light.Position = new Vector(2, 0.5f, 0, 1);
 
         }
 
@@ -74,7 +76,7 @@ namespace GK4
         private void button1_Click(object sender, EventArgs e)
         {
             // cam = new Camera();
-            cam.Position = new Vector(0.1f, 1.5f, 3f, 1);
+            cam.Position = new Vector(0.5f, 2f, 4, 1);
             pictureBox1.CreateGraphics().Clear(Color.Black);
             cam.Target = new Vector(0, 0.5f, 0, 1);
             cam.UpWorld = new Vector(0, 1, 0);
@@ -82,7 +84,11 @@ namespace GK4
             Cone cone = new Cone(16);
             Cylinder cylinder = new Cylinder(40);
 
-            Render(cone, cam);
+
+            RenderFlat(cube, cam);
+            //Render(cone, cam);
+
+
 
 
         }
@@ -102,21 +108,108 @@ namespace GK4
             return Proj;
         }
 
-        private void Render(Figure figure, Camera _cam)
+        private void RenderGouraud(Figure figure, Camera _cam)
         {
+            Matrix Model = GetModelMatrix(figure);
+            Matrix View = _cam.GetViewMatrix();
+            Matrix Proj = GetProjectionMatrix(n, f, fov, aspect);
+            Bitmap B = pictureBox1.Image as Bitmap;
+            int W = pictureBox1.Width;
+            int H = pictureBox1.Height;
 
+            Matrix PV = Matrix.Multiply(Proj, View);
+            //if (Model != null)
+            //    PVM = Matrix.Multiply(PVM, Model);
+
+            foreach (Triangle T in figure.triangles)
+            {
+                Vector v1, v2, v3, n1, n2, n3;
+                if (Model != null)
+                {
+                    v1 = Matrix.Multiply(Model, T[0]);
+                    v2 = Matrix.Multiply(Model, T[1]);
+                    v3 = Matrix.Multiply(Model, T[2]);
+                    n1 = Matrix.Multiply(Model, T.normals[0]);
+                    n2 = Matrix.Multiply(Model, T.normals[1]);
+                    n3 = Matrix.Multiply(Model, T.normals[2]);
+                }
+                else
+                {
+                    v1 = T[0];
+                    v2 = T[1];
+                    v3 = T[2];
+                    n1 = T.normals[0];
+                    n2 = T.normals[1];
+                    n3 = T.normals[2];
+                }
+                n1.Normalize();
+                n2.Normalize();
+                n3.Normalize();
+
+                float dist1 = CalculateDistance3D(v1, cam.Position);
+                float dist2 = CalculateDistance3D(v2, cam.Position);
+                float dist3 = CalculateDistance3D(v3, cam.Position);
+                Vector toLightVersor1 = (light.Position - v1).Normalize();
+                Vector toLightVersor2 = (light.Position - v2).Normalize();
+                Vector toLightVersor3 = (light.Position - v3).Normalize();
+                Vector toObserver1 = (cam.Position - v1).Normalize();
+                Vector toObserver2 = (cam.Position - v2).Normalize();
+                Vector toObserver3 = (cam.Position - v3).Normalize();
+
+                Color col1 = CalculateColor(toLightVersor1, n1, toObserver1, dist1);
+                Color col2 = CalculateColor(toLightVersor2, n2, toObserver2, dist2);
+                Color col3 = CalculateColor(toLightVersor3, n3, toObserver3, dist3);
+
+                v1 = Matrix.Multiply(PV, v1);
+                v2 = Matrix.Multiply(PV, v2);
+                v3 = Matrix.Multiply(PV, v3);
+
+                float v1x = v1[0] / v1[3];
+                float v1y = v1[1] / v1[3];
+                float v1z = v1[2] / v1[3];
+                float v2x = v2[0] / v2[3];
+                float v2y = v2[1] / v2[3];
+                float v2z = v2[2] / v2[3];
+                float v3x = v3[0] / v3[3];
+                float v3y = v3[1] / v3[3];
+                float v3z = v3[2] / v3[3];
+
+                v1x = (v1x + 1) * W / 2;
+                v1y = -(v1y - 1) * H / 2;
+                v1z = (v1z + 1) / 2;
+                v2x = (v2x + 1) * W / 2;
+                v2y = -(v2y - 1) * H / 2;
+                v2z = (v2z + 1) / 2;
+                v3x = (v3x + 1) * W / 2;
+                v3y = -(v3y - 1) * H / 2;
+                v3z = (v3z + 1) / 2;
+
+                FillTriangle(ref B, v1x, v1y, v1z, col1, v2x, v2y, v2z, col2, v3x, v3y, v3z, col3);
+
+            }
+            pictureBox1.Image = B;
+        }
+
+        private void FillTriangle(ref Bitmap b, float v1x, float v1y, float v1z, Color col1, float v2x, float v2y, float v2z, Color col2, float v3x, float v3y, float v3z, Color col3)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RenderFlat(Figure figure, Camera _cam)
+        {
+            //int xxx = 0;
             Matrix View = _cam.GetViewMatrix();
             Matrix Proj = GetProjectionMatrix(n, f, fov, aspect);
             Matrix PVM = Matrix.Multiply(Proj, View);
             Bitmap B = pictureBox1.Image as Bitmap;
 
 
-            //var M = ModelTransformations.GetTranslationMatrix(1f, 0.5f, -3);
-            //PVM = Matrix.Multiply(PVM, M);
+            //var M = Matrix.Multiply(ModelTransformations.GetTranslationMatrix(0, 0.5f, 0),ModelTransformations.GetXTurnMatrix(20));
+            // PVM = Matrix.Multiply(PVM, M);
 
 
             foreach (var T in figure.triangles)
-            { 
+            {
                 Vector v1 = Matrix.Multiply(PVM, T[0]);
                 Vector v2 = Matrix.Multiply(PVM, T[1]);
                 Vector v3 = Matrix.Multiply(PVM, T[2]);
@@ -182,7 +275,13 @@ namespace GK4
                 FillTriangle(ref B, new Triangle(v1x, v1y, v1z, v2x, v2y, v2z, v3x, v3y, v3z), triangleColor);
                 //     MyDrawLine(ref B, (int)v1x, (int)v1y, (int)v2x, (int)v2y, Color.BlueViolet);
                 //     MyDrawLine(ref B, (int)v2x, (int)v2y, (int)v3x, (int)v3y, Color.BlueViolet);
-                //     MyDrawLine(ref B, (int)v3x, (int)v3y, (int)v1x, (int)v1y, Color.BlueViolet);               
+                //     MyDrawLine(ref B, (int)v3x, (int)v3y, (int)v1x, (int)v1y, Color.BlueViolet);      
+                //    if (xxx == XXX)
+                //    {
+                //        XXX++;
+                //        break;
+                //    }
+                //    xxx++;
             }
             pictureBox1.Image = B;
         }
@@ -194,7 +293,7 @@ namespace GK4
             int B = light.Colour.B;
 
             float L1N = Vector.DotProduct(toLightVersor, normal);
-            float RV = Vector.DotProduct(2 * L1N * (normal - toLightVersor), toObserver);
+            float RV = Vector.DotProduct(2 * L1N * normal - toLightVersor, toObserver);
             float att = GetAttenuation(distance);
 
             R = (int)(ambient * R + ((diffuse * L1N) * R + specular * (float)Math.Pow(RV, shiness) * R) * att);
@@ -324,10 +423,10 @@ namespace GK4
                 {
                     if (j < -1000)
                     {
-                  //      if (Math.Abs(curr1) > 3000)
-                  //          return;
+                        //      if (Math.Abs(curr1) > 3000)
+                        //          return;
                         break;
-                        
+
                     }
                     q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
                     Z = currZ1 * (1 - q) + currZ2 * q;
@@ -380,8 +479,8 @@ namespace GK4
                     Z = currZ1 * (1 - q) + currZ2 * q;
                     if (j < -1000)
                     {
-                     //   if (Math.Abs(curr1) > 3000)
-                     //       return;
+                        //   if (Math.Abs(curr1) > 3000)
+                        //       return;
                         break;
                     }
                     if (j > -1 && i > -1 && j < B.Width && i < B.Height && Z > ZBuffer[j, i])
@@ -510,6 +609,44 @@ namespace GK4
             MessageBox.Show(Matrix.Multiply(B, A).ToString());
 
 
+        }
+
+        private Matrix GetModelMatrix(Figure fig)
+        {
+            Matrix ret = null;
+            if (fig.Xtranslation != 0 && fig.Ytranslation != 0f && fig.Ztranslation != 0)
+            {
+                ret = ModelTransformations.GetTranslationMatrix(fig.Xtranslation, fig.Ytranslation, fig.Ztranslation);
+            }
+            if (fig.Xscale != 0 && fig.Yscale != 0 && fig.Zscale != 0)
+            {
+                if (ret != null)
+                    ret = Matrix.Multiply(ret, ModelTransformations.GetScaleMatrix(fig.Xscale, fig.Yscale, fig.Zscale));
+                else
+                    ret = ModelTransformations.GetScaleMatrix(fig.Xscale, fig.Yscale, fig.Zscale);
+            }
+            if (fig.Xturn != 0)
+            {
+                if (ret != null)
+                    ret = Matrix.Multiply(ret, ModelTransformations.GetXTurnMatrix(fig.Xturn));
+                else
+                    ret = ModelTransformations.GetXTurnMatrix(fig.Xturn);
+            }
+            if (fig.Yturn != 0)
+            {
+                if (ret != null)
+                    ret = Matrix.Multiply(ret, ModelTransformations.GetYTurnMatrix(fig.Yturn));
+                else
+                    ret = ModelTransformations.GetYTurnMatrix(fig.Yturn);
+            }
+            if (fig.Zturn != 0)
+            {
+                if (ret != null)
+                    ret = Matrix.Multiply(ret, ModelTransformations.GetZTurnMatrix(fig.Zturn));
+                else
+                    ret = ModelTransformations.GetZTurnMatrix(fig.Zturn);
+            }
+            return ret;
         }
 
         private float GetAttenuation(float distance)

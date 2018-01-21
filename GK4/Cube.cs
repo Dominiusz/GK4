@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GK4
 {
+    [Serializable]
     class Cube : Figure
     {
         //public Triangle[] triangles;

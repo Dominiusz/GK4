@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GK4
 {
+    [Serializable]
     class Camera
     {
         public Vector Position { get; set; }

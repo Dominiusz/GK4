@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace GK4
 {
+    [Serializable]
     class Light
     {
         public Vector Position { get; set; }

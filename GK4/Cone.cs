@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace GK4
 {
+    [Serializable]
     class Cone : Figure
     {
         public Cone(int pieces)

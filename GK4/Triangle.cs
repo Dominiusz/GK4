@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GK4
 {
+    [Serializable]
     public class Triangle
     {
         public Vector[] normals;

@@ -7,7 +7,8 @@ using System.Windows.Forms;
 
 namespace GK4
 {
-   public class Matrix
+    [Serializable]
+    public class Matrix
     {
         private float[,] array;
         public int Rows => array.GetLength(0);

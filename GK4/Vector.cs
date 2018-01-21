@@ -9,6 +9,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace GK4
 {
+    [Serializable]
     public class Vector
     {
         private float[] table;
