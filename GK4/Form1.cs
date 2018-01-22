@@ -36,7 +36,7 @@ namespace GK4
         {
             InitializeComponent();
             FillSceneBlack();
-            light.Position = new Vector(2, 0.5f, 0, 1);
+            light.Position = new Vector(0.1f, 0.1f, 0.5f, 1);
 
         }
 
@@ -76,18 +76,18 @@ namespace GK4
         private void button1_Click(object sender, EventArgs e)
         {
             // cam = new Camera();
-            cam.Position = new Vector(0.5f, 2f, 4, 1);
-            pictureBox1.CreateGraphics().Clear(Color.Black);
+            cam.Position = new Vector(0f, 2, 1, 1);
+           // pictureBox1.CreateGraphics().Clear(Color.Black);
             cam.Target = new Vector(0, 0.5f, 0, 1);
             cam.UpWorld = new Vector(0, 1, 0);
             Cube cube = new Cube();
             Cone cone = new Cone(16);
-            Cylinder cylinder = new Cylinder(40);
+            Cylinder cylinder = new Cylinder(36);
 
 
-            RenderFlat(cube, cam);
+            RenderGouraud(cylinder, cam);
             //Render(cone, cam);
-
+          //  XXX++;
 
 
 
@@ -110,6 +110,8 @@ namespace GK4
 
         private void RenderGouraud(Figure figure, Camera _cam)
         {
+          //  int xxx = 0;
+
             Matrix Model = GetModelMatrix(figure);
             Matrix View = _cam.GetViewMatrix();
             Matrix Proj = GetProjectionMatrix(n, f, fov, aspect);
@@ -184,15 +186,243 @@ namespace GK4
                 v3y = -(v3y - 1) * H / 2;
                 v3z = (v3z + 1) / 2;
 
-                FillTriangle(ref B, v1x, v1y, v1z, col1, v2x, v2y, v2z, col2, v3x, v3y, v3z, col3);
-
+                FillTriangle(ref B, new Vector(v1x, v1y, v1z, v1[3]), col1, new Vector(v2x, v2y, v2z, v2[3]), col2, new Vector(v3x, v3y, v3z, v3[3]), col3);
+            //    if(xxx==XXX)
+            //        break;
+            //    xxx++;
             }
             pictureBox1.Image = B;
         }
 
-        private void FillTriangle(ref Bitmap b, float v1x, float v1y, float v1z, Color col1, float v2x, float v2y, float v2z, Color col2, float v3x, float v3y, float v3z, Color col3)
+        private void FillTriangle(ref Bitmap b, Vector vector1, Color col1, Vector vector2, Color col2, Vector vector3, Color col3)
         {
-            throw new NotImplementedException();
+            var sorted = new List<Tuple<Vector, Color>>();
+            sorted.Add(new Tuple<Vector, Color>(vector1, col1));
+            sorted.Add(new Tuple<Vector, Color>(vector2, col2));
+            sorted.Add(new Tuple<Vector, Color>(vector3, col3));
+            sorted.Sort((v1, v2) => v1.Item1[1].CompareTo(v2.Item1[1]));
+
+            float x1f, y1f, x2f, y2f, x3f, y3f, z1f, z2f, z3f, wc1, wc2, wc3;
+            Color c1, c2, c3;
+
+            x1f = sorted[0].Item1[0];
+            y1f = sorted[0].Item1[1];
+            z1f = sorted[0].Item1[2];
+            wc1 = sorted[0].Item1[3];
+            c1 = sorted[0].Item2;
+
+            x2f = sorted[1].Item1[0];
+            y2f = sorted[1].Item1[1];
+            z2f = sorted[1].Item1[2];
+            wc2 = sorted[1].Item1[3];
+            c2 = sorted[1].Item2;
+
+            x3f = sorted[2].Item1[0];
+            y3f = sorted[2].Item1[1];
+            z3f = sorted[2].Item1[2];
+            wc3 = sorted[2].Item1[3];
+            c3 = sorted[2].Item2;
+
+            int y1 = (int)y1f;
+            int y2 = (int)y2f;
+            int y3 = (int)y3f;
+            int x1 = (int)x1f;
+            int x2 = (int)x2f;
+            int x3 = (int)x3f;
+
+            int x4 = (int)(x1f + (y2f - y1f) / (y3f - y1f) * (x3f - x1f));
+            int y4 = (int)y2f;
+            float q = CalculateDistance2D(x1, y1, x4, y4) / CalculateDistance2D(x1, y1, x3, y3);
+            float z4f = z1f * (1 - q) + z3f * q;
+            float wc4 = wc1 * (1 - q) + wc3 * q;
+            Color col4 = InterpolateColor(col1, col3, wc1, wc3, q);
+
+
+            if (y2 == y3)
+            {
+                FillBottomFlatTriangle(ref b, x1, y1, z1f, wc1, col1, x2, y2, z2f, wc2, col2, x3, y3, z3f, wc3, col3);
+            }
+            else if (y1 == y2)
+            {
+                FillTopFlatTriangle(ref b, x1, y1, z1f, wc1, col1, x2, y2, z2f, wc2, col2, x3, y3, z3f, wc3, col3);
+            }
+            else
+            {
+
+                FillBottomFlatTriangle(ref b, x1, y1, z1f, wc1, col1, x2, y2, z2f, wc2, col2, x4, y4, z4f, wc4, col4);
+                FillTopFlatTriangle   (ref b, x2, y2, z2f, wc2, col2, x4, y4, z4f, wc4, col4, x3, y3, z3f, wc3, col3);
+            }
+
+
+
+
+        }
+
+
+        private Color InterpolateColor(Color col1, Color col2, float wc1, float wc2, float q)
+        {
+            int R = (int)((col1.R * (1 - q) / wc1 + col2.R * q / wc2) / ((1 - q) / wc1 + q / wc2));
+            int G = (int)((col1.G * (1 - q) / wc1 + col2.G * q / wc2) / ((1 - q) / wc1 + q / wc2));
+            int B = (int)((col1.B * (1 - q) / wc1 + col2.B * q / wc2) / ((1 - q) / wc1 + q / wc2));
+
+            R = Math.Min(Math.Max(0, R), 255);
+            G = Math.Min(Math.Max(0, G), 255);
+            B = Math.Min(Math.Max(0, B), 255);
+
+            return Color.FromArgb(R, G, B);
+        }
+
+        private void FillBottomFlatTriangle(ref Bitmap b, int x1, int y1, float z1f, float wc1, Color col1, int x2, int y2, float z2f, float wc2, Color col2, int x3, int y3, float z3f, float wc3, Color col3)
+        {
+            if (x2 > x3)
+            {
+                int tmp = x2;
+                x2 = x3;
+                x3 = tmp;
+                tmp = y2;
+                y2 = y3;
+                y3 = tmp;
+                float tmpf = z2f;
+                z2f = z3f;
+                z3f = tmpf;
+                tmpf = wc2;
+                wc2 = wc3;
+                wc3 = tmpf;
+                Color tmpc = col2;
+                col2 = col3;
+                col3 = tmpc;
+            }
+
+            int width = b.Width;
+            int height = b.Height;
+
+            double dy1 = (double)(x2 - x1) / (y2 - y1);
+            double dy2 = (double)(x3 - x1) / (y3 - y1);
+
+            double curr1 = x1;
+            double curr2 = x1;
+
+            float currZ1; //= z1f;
+            float currZ2; //= z2f;
+            float Z;
+
+            float currWC1;
+            float currWC2;
+
+            Color C1;
+            Color C2;
+            Color C;
+
+            for (int i = y1; i <= y2; i++)
+            {
+                float q = CalculateDistance2D((int)curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x2, y2);
+                currZ1 = z1f * (1 - q) + z2f * q;
+                currWC1 = wc1 * (1 - q) + wc2 * q;
+                C1 = InterpolateColor(col1, col2, wc1, wc2, q);
+
+                q = CalculateDistance2D((int)curr2, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
+                currZ2 = z1f * (1 - q) + z3f * q;
+                currWC2 = wc1 * (1 - q) + wc3 * q;
+                C2 = InterpolateColor(col1, col3, wc1, wc3, q);
+
+                for (int j = (int)curr1; j <= (int)curr2; j++)
+                {
+                    if (j < -1000)
+                    {
+                        //      if (Math.Abs(curr1) > 3000)
+                        //          return;
+                        break;
+
+                    }
+                    q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
+                    Z = currZ1 * (1 - q) + currZ2 * q;
+                    
+                    C = InterpolateColor(C1, C2, currWC1, currWC2, q);
+
+                    if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                    {
+                        ZBuffer[j, i] = Z;
+                        b.SetPixel(j, i, C);
+                    } //MyDrawLine(ref B, (int)curr1, i, (int)curr2, i, C);
+                }
+                curr1 += dy1;
+                curr2 += dy2;
+            }
+        }
+
+        private void FillTopFlatTriangle(ref Bitmap b, int x1, int y1, float z1f, float wc1, Color col1, int x2, int y2, float z2f, float wc2, Color col2, int x3, int y3, float z3f, float wc3, Color col3)
+        {
+            if (x1 > x2)
+            {
+                int tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+                tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+                float tmpf = z1f;
+                z1f = z2f;
+                z2f = tmpf;
+                tmpf = wc1;
+                wc1 = wc2;
+                wc2 = tmpf;
+                Color tmpc = col1;
+                col1 = col2;
+                col2 = tmpc;
+            }
+            int width = b.Width;
+            int height = b.Height;
+
+            double dy1 = (double)(x3 - x1) / (y3 - y1);
+            double dy2 = (double)(x3 - x2) / (y3 - y2);
+
+            double curr1 = x3;
+            double curr2 = x3;
+
+            float currZ1;
+            float currZ2;
+            float Z;
+
+            float currWC1;
+            float currWC2;
+
+            Color C1;
+            Color C2;
+            Color C;
+
+            for (int i = y3; i > y1; i--)
+            {
+                float q = CalculateDistance2D((int)curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
+                currZ1 = z3f * (1 - q) + z1f * q;
+                currWC1 = wc3 * (1 - q) + wc1 * q;
+                C1 = InterpolateColor(col3, col1, wc3, wc1, q);
+
+                q = CalculateDistance2D((int)curr2, i, x3, y3) / CalculateDistance2D(x2, y2, x3, y3);
+                currZ2 = z3f * (1 - q) + z2f * q;
+                currWC2 = wc3 * (1 - q) + wc2 * q;
+                C2 = InterpolateColor(col3, col2, wc3, wc2, q);
+
+                for (int j = (int)curr1; j <= (int)curr2; j++)
+                {
+                    q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
+                    Z = currZ1 * (1 - q) + currZ2 * q;
+                    C = InterpolateColor(C1, C2, currWC1, currWC2, q);
+
+                    if (j < -1000)
+                    {
+                        //   if (Math.Abs(curr1) > 3000)
+                        //       return;
+                        break;
+                    }
+                    if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                    {
+                        ZBuffer[j, i] = Z;
+                        b.SetPixel(j, i, C);
+                    } //  MyDrawLine(ref B,(int)curr1,i,(int)curr2,i,C);
+                }
+                curr1 -= dy1;
+                curr2 -= dy2;
+            }
         }
 
         private void RenderFlat(Figure figure, Camera _cam)
@@ -320,20 +550,18 @@ namespace GK4
         private void button2_Click(object sender, EventArgs ea)
         {
             // FillSceneBlack();
-            Random rnd = new Random();
-            Triangle t = new Triangle(200, 250, 999, 100, 100, 999, 50, 450, 999);
-            Bitmap b = pictureBox1.Image as Bitmap;
+           // Random rnd = new Random();
+           // Triangle t = new Triangle(200, 250, 999, 100, 100, 999, 50, 450, 999);
+          
 
-            //for (int i = 0; i < 10; i++)
-            {
-                t = new Triangle(rnd.Next(400), rnd.Next(400), rnd.Next(400), rnd.Next(400), rnd.Next(400), rnd.Next(400), rnd.Next(400), rnd.Next(400), rnd.Next(400));
-                //t = new Triangle(181, 24, 999, 252, 173, 999, 210, 288, 999);
-                FillTriangle(ref b, t, Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256)));
-            }
+            Cube Tri = new Cube();
+            Tri.triangles=new Triangle[1];
+            Tri.triangles[0]= new Triangle(new Vector(0,0,0,1),new Vector(0.7f,0,0,1),new Vector(0,0.7f,0,1));
+            Tri.triangles[0].normals=new Vector[3];
+            Tri.triangles[0].normals[0] =
+                Tri.triangles[0].normals[1] = Tri.triangles[0].normals[2] = new Vector(0, 0, 1, 0);
 
-
-            pictureBox1.Image = b;
-            T = t;
+            RenderGouraud(Tri,cam);
 
         }
 
@@ -383,7 +611,7 @@ namespace GK4
             {
 
                 FillBottomFlatTriangle(ref B, C, x1, y1, z1f, x2, y2, z2f, x4, y4, z4f);
-                FillTopFlatTriangle(ref B, C, x2, y2, z2f, x4, y4, z4f, x3, y3, z4f);
+                FillTopFlatTriangle(ref B, C, x2, y2, z2f, x4, y4, z4f, x3, y3, z3f);
             }
         }
 
@@ -414,9 +642,9 @@ namespace GK4
 
             for (int i = y1; i <= y2; i++)
             {
-                float q = CalculateDistance2D((int)curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x2, y2);
+                float q = CalculateDistance2D(curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x2, y2);
                 currZ1 = z1f * (1 - q) + z2f * q;
-                q = CalculateDistance2D((int)curr2, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
+                q = CalculateDistance2D(curr2, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
                 currZ2 = z1f * (1 - q) + z3f * q;
 
                 for (int j = (int)curr1; j <= (int)curr2; j++)
@@ -428,7 +656,7 @@ namespace GK4
                         break;
 
                     }
-                    q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
+                    q = CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
                     Z = currZ1 * (1 - q) + currZ2 * q;
                     if (j > -1 && i > -1 && j < B.Width && i < B.Height && Z > ZBuffer[j, i])
                     {
@@ -468,14 +696,14 @@ namespace GK4
 
             for (int i = y3; i > y1; i--)
             {
-                float q = CalculateDistance2D((int)curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
+                float q = CalculateDistance2D(curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
                 currZ1 = z3f * (1 - q) + z1f * q;
-                q = CalculateDistance2D((int)curr2, i, x3, y3) / CalculateDistance2D(x2, y2, x3, y3);
+                q = CalculateDistance2D(curr2, i, x3, y3) / CalculateDistance2D(x2, y2, x3, y3);
                 currZ2 = z3f * (1 - q) + z2f * q;
 
                 for (int j = (int)curr1; j <= (int)curr2; j++)
                 {
-                    q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
+                    q = CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
                     Z = currZ1 * (1 - q) + currZ2 * q;
                     if (j < -1000)
                     {
@@ -581,6 +809,11 @@ namespace GK4
         }
 
         private float CalculateDistance2D(int x1, int y1, int x2, int y2)
+        {
+            return (float)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+        }
+
+        private float CalculateDistance2D(double x1, double y1, double x2, double y2)
         {
             return (float)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         }
