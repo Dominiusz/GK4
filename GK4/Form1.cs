@@ -32,8 +32,16 @@ namespace GK4
             InitializeComponent();
             FillSceneBlack();
             scene = new Scene();
-            pictureBox1.Image = new Bitmap("C:\\Users\\450 G2\\Desktop\\Obrazki\\Bez tytułu — kopia.png");
-
+            //pictureBox1.Image = new Bitmap("C:\\Users\\450 G2\\Desktop\\Obrazki\\Bez tytułu — kopia.png");
+            ambientTrackBar.Value = 80;
+            diffuseTrackBar.Value = 80;
+            specularTrackBar.Value = 80;
+            shinessNUD.Value = 32;
+            aspectNUD.Increment = 0.1M;
+            aspectNUD.Value = 1;
+            farNUD.Value = 100;
+            nearNUD.Value = 1;
+            fieldOfViewNUD.Value = 45;
 
 
         }
@@ -81,6 +89,7 @@ namespace GK4
             Cone cone = new Cone(16);
             Cylinder cylinder = new Cylinder(20);
             scene.Light.Colour=Color.Crimson;
+            scene.Light.Position= new Vector(0,1,1,1);
 
             Rendering R = new Rendering(ZBuffer);
 
@@ -478,5 +487,53 @@ namespace GK4
             r.RenderGouraud(scene,ref B);
             pictureBox1.Image = B;
         }
+
+        private void ambientTrackBar_Scroll(object sender, EventArgs e)
+        {
+            float val = ambientTrackBar.Value/100f;
+            scene.Light.Ambient = val;
+            ambientLabel.Text = "Ambient:  " + String.Format("{0:0.00}",val);
+        }
+
+        private void diffuseTrackBar_Scroll(object sender, EventArgs e)
+        {
+            float val = diffuseTrackBar.Value/100f;
+            scene.Light.Diffuse = val;
+            diffuseLabel.Text = "Diffuse:    " + String.Format("{0:0.00}", val);
+        }
+
+        private void specularTrackBar_Scroll(object sender, EventArgs e)
+        {
+            float val = specularTrackBar.Value/100f;
+            scene.Light.Specular = val;
+            specularLabel.Text = "Specular: " + String.Format("{0:0.00}", val);
+        }
+
+        private void shinessNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Light.Shiness = (float)shinessNUD.Value;
+        }
+
+        private void aspectNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Aspect = (float)aspectNUD.Value;
+        }
+
+        private void fieldOfViewNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.FieldOfView = (float)fieldOfViewNUD.Value;
+        }
+
+        private void farNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Far = (float) farNUD.Value;
+        }
+
+        private void nearNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Near = (float) nearNUD.Value;
+        }
+
+       
     }
 }
