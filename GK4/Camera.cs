@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace GK4
 {
     [Serializable]
-    class Camera
+    public class Camera
     {
         public Vector Position { get; set; }
         public Vector Target { get; set; }
@@ -19,8 +19,8 @@ namespace GK4
 
         public Camera()
         {
-            Position = new Vector(3, 0.5f, 0.5f,1);
-            Target = new Vector(0, 0.5f, 0.5f,1);
+            Position = new Vector(0, 1f, 2f, 1);
+            Target = new Vector(0, 0.5f, 0, 1);
             UpWorld = new Vector(0, 1, 0);
         }
 

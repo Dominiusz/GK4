@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -8,12 +9,19 @@ using System.Threading.Tasks;
 namespace GK4
 {
     [Serializable]
-    class Cylinder : Figure
+    public class Cylinder : Figure
     {
+        public Cylinder()
+        {
+            ;
+        }
+
         public Cylinder(int pieces)
         {
             if (pieces < 4)
                 throw new ArgumentException();
+
+            Colour = Color.White;
 
             Xtranslation = 0;
             Xscale = 1;

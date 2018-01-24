@@ -33,14 +33,17 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.newSceneButton = new System.Windows.Forms.Button();
+            this.loadbutton = new System.Windows.Forms.Button();
+            this.saveButton = new System.Windows.Forms.Button();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -89,6 +92,9 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.newSceneButton);
+            this.panel1.Controls.Add(this.loadbutton);
+            this.panel1.Controls.Add(this.saveButton);
             this.panel1.Controls.Add(this.numericUpDown3);
             this.panel1.Controls.Add(this.numericUpDown2);
             this.panel1.Controls.Add(this.numericUpDown1);
@@ -101,45 +107,39 @@
             this.panel1.Size = new System.Drawing.Size(318, 603);
             this.panel1.TabIndex = 4;
             // 
-            // numericUpDown1
+            // newSceneButton
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(54, 496);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
-            this.numericUpDown1.TabIndex = 4;
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            this.newSceneButton.Location = new System.Drawing.Point(201, 545);
+            this.newSceneButton.Name = "newSceneButton";
+            this.newSceneButton.Size = new System.Drawing.Size(112, 35);
+            this.newSceneButton.TabIndex = 9;
+            this.newSceneButton.Text = "Nowa scena";
+            this.newSceneButton.UseVisualStyleBackColor = true;
+            this.newSceneButton.Click += new System.EventHandler(this.newSceneButton_Click);
             // 
-            // numericUpDown2
+            // loadbutton
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(54, 524);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(120, 22);
-            this.numericUpDown2.TabIndex = 5;
-            this.numericUpDown2.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+            this.loadbutton.Location = new System.Drawing.Point(104, 545);
+            this.loadbutton.Name = "loadbutton";
+            this.loadbutton.Size = new System.Drawing.Size(84, 35);
+            this.loadbutton.TabIndex = 8;
+            this.loadbutton.Text = "Wczytaj";
+            this.loadbutton.UseVisualStyleBackColor = true;
+            this.loadbutton.Click += new System.EventHandler(this.loadbutton_Click);
+            // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(14, 545);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(84, 35);
+            this.saveButton.TabIndex = 7;
+            this.saveButton.Text = "Zapisz";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // numericUpDown3
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(54, 552);
+            this.numericUpDown3.Location = new System.Drawing.Point(46, 410);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             10,
             0,
@@ -155,6 +155,42 @@
             this.numericUpDown3.TabIndex = 6;
             this.numericUpDown3.ValueChanged += new System.EventHandler(this.numericUpDown3_ValueChanged);
             // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(46, 382);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown2.TabIndex = 5;
+            this.numericUpDown2.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(46, 354);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown1.TabIndex = 4;
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -166,9 +202,9 @@
             this.Text = "GK4";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -183,6 +219,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDown3;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Button newSceneButton;
+        private System.Windows.Forms.Button loadbutton;
+        private System.Windows.Forms.Button saveButton;
     }
 }
 

@@ -12,15 +12,20 @@ namespace GK4
     [Serializable]
     public class Vector
     {
-        private float[] table;
+        public  float[] table;
 
         public int Rank => table.Length;
 
-        public bool IsVertical { get; private set; }
+        public bool IsVertical { get; set; }
 
         public float Length { get { return (float)Math.Sqrt(table.Sum(a => a * a)); } }
 
         public float this[int ind] { get { return table[ind]; } set { table[ind] = value; } }
+
+        public Vector()
+        {
+            ;
+        }
 
         public Vector(List<float> list, bool _IsVertical = true)
         {

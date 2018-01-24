@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,12 +9,19 @@ using System.Threading.Tasks;
 namespace GK4
 {
     [Serializable]
-    class Cone : Figure
+    public class Cone : Figure
     {
+        public Cone()
+        {
+            ;
+        }
+
         public Cone(int pieces)
         {
             if (pieces < 4)
                 throw new ArgumentException();
+
+            Colour = Color.White;
 
             Xtranslation = 0;
             Xscale = 1;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace GK4
 {
     [Serializable]
-    class Cube : Figure
+    public class Cube : Figure
     {
         //public Triangle[] triangles;
 
@@ -22,6 +23,8 @@ namespace GK4
             Ztranslation = 0;
             Zscale = 1;
             Zturn = 0;
+
+            Colour = Color.White;
 
             triangles = new Triangle[12];
 
