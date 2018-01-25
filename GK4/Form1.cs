@@ -21,6 +21,7 @@ namespace GK4
     {
         private Scene scene;
         private Rendering rendering;
+        private Figure selectedFigure;
 
 
         private float[,] ZBuffer;
@@ -31,27 +32,30 @@ namespace GK4
             InitializeComponent();
             FillScene(Color.Black);
             scene = new Scene();
+            rendering = new Rendering(ref ZBuffer);
+
             //pictureBox1.Image = new Bitmap("C:\\Users\\450 G2\\Desktop\\Obrazki\\Bez tytułu — kopia.png");
 
             SetDefaultValues();
-
-
-            // Cube cube = new Cube();
-            // Cone cone = new Cone(16);
             Cylinder cylinder = new Cylinder(20);
-            // scene.Figures.Add(cone);
-            // scene.Figures.Add(cube);
-
-            //  comboBox1.DataSource = scene.Figures;
             scene.Figures.Add(cylinder);
             comboBox1.DataSource = null;
             comboBox1.DataSource = scene.Figures;
 
         }
 
-
-
-
+        private void SetEdit(Figure figure)
+        {
+            xTranslationNUD.Value = (decimal)figure.Xtranslation;
+            yTranslationNUD.Value = (decimal)figure.Ytranslation;
+            zTranslationNUD.Value = (decimal)figure.Ztranslation;
+            xRotationNUD.Value = (decimal)figure.Xturn;
+            yRotationNUD.Value = (decimal)figure.Yturn;
+            zRotationNUD.Value = (decimal)figure.Zturn;
+            xScaleNUD.Value = (decimal)figure.Xscale;
+            yScaleNUD.Value = (decimal)figure.Yscale;
+            zScaleNUD.Value = (decimal)figure.Zscale;
+        }
 
         private void SetFromSaved()
         {
@@ -130,7 +134,12 @@ namespace GK4
             lightYNUD.Value = 2M;
             lightZNUD.Increment = 0.1M;
             lightZNUD.Value = 1M;
-
+            xScaleNUD.Increment = 0.01M;
+            yScaleNUD.Increment = 0.01M;
+            zScaleNUD.Increment = 0.01M;
+            xTranslationNUD.Increment = 0.01M;
+            yTranslationNUD.Increment = 0.01M;
+            zTranslationNUD.Increment = 0.01M;
         }
 
         private void FillScene(Color color)
@@ -164,52 +173,27 @@ namespace GK4
                 }
             }
 
+            if (rendering != null)
+                rendering.ZBuffer = ZBuffer;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Repaint()
         {
-
-            //  scene.Camera.Position = new Vector(0f, 2, 3, 1);
-            //  scene.Camera.Target = new Vector(0, 0.5f, 0, 1);
-            //  scene.Camera.UpWorld = new Vector(0, 1, 0);
-
-            //scene.Light.Colour = Color.Crimson;
-            // scene.Light.Position = new Vector(0, 1, 1, 1);
-
             FillScene(scene.Background);
-
-            Rendering R = new Rendering(ZBuffer);
             Bitmap PBbtmap = pictureBox1.Image as Bitmap;
 
             if (noFillRB.Checked)
-                R.RenderOutlines(scene, ref PBbtmap);
+                rendering.RenderOutlines(scene, ref PBbtmap);
             else if (flatFillRB.Checked)
             {
-                R.RenderFlat(scene, ref PBbtmap);
+                rendering.RenderFlat(scene, ref PBbtmap);
             }
             else
             {
-                R.RenderGouraud(scene, ref PBbtmap);
+                rendering.RenderGouraud(scene, ref PBbtmap);
             }
 
             pictureBox1.Image = PBbtmap;
-
-            //RenderGouraud(cone, cam,ref PBbtmap);
-            //  cone.Ytranslation = 1;
-            // RenderGouraud(cone, cam);
-            //Render(cone, cam);
-        }
-
-
-
-
-
-
-        private void SwapBitmaps(ref Bitmap b1, ref Bitmap b2)
-        {
-            Bitmap tmp = b1;
-            b1 = b2;
-            b2 = tmp;
         }
 
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
@@ -217,16 +201,16 @@ namespace GK4
             if (pictureBox1.Height > 0 && pictureBox1.Width > 0)
             {
                 pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-                FillScene(Color.Black);
+                if (scene != null)
+                    FillScene(scene.Background);
             }
-            // button1_Click(null,null);
         }
 
         private void saveButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "XML files|*.xml";
-            saveFileDialog1.Title = "Zapisz scenę";
+            saveFileDialog1.Title = "Save scene";
             saveFileDialog1.ShowDialog();
 
             if (saveFileDialog1.FileName != "")
@@ -246,7 +230,7 @@ namespace GK4
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "XML files|*.xml";
-            openFileDialog1.Title = "Wczytaj scenę";
+            openFileDialog1.Title = "Load scene";
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -264,10 +248,15 @@ namespace GK4
 
         private void newSceneButton_Click(object sender, EventArgs e)
         {
-            Bitmap B = pictureBox1.Image as Bitmap;
-            Rendering r = new Rendering(ZBuffer);
-            r.RenderGouraud(scene, ref B);
-            pictureBox1.Image = B;
+            SetDefaultValues();
+            scene = new Scene();
+            FillScene(Color.Black);
+            lightColorLabel.BackColor = Color.White;
+            backgroundColorLabel.BackColor = Color.Black;
+            comboBox1.DataSource = null;
+            comboBox1.DataSource = scene.Figures;
+            selectedFigure = null;
+            RunEvents();
         }
 
         private void ambientTrackBar_Scroll(object sender, EventArgs e)
@@ -275,6 +264,7 @@ namespace GK4
             float val = ambientTrackBar.Value / 100f;
             scene.Light.Ambient = val;
             ambientLabel.Text = "Ambient:  " + String.Format("{0:0.00}", val);
+            Repaint();
         }
 
         private void diffuseTrackBar_Scroll(object sender, EventArgs e)
@@ -282,6 +272,7 @@ namespace GK4
             float val = diffuseTrackBar.Value / 100f;
             scene.Light.Diffuse = val;
             diffuseLabel.Text = "Diffuse:    " + String.Format("{0:0.00}", val);
+            Repaint();
         }
 
         private void specularTrackBar_Scroll(object sender, EventArgs e)
@@ -289,31 +280,37 @@ namespace GK4
             float val = specularTrackBar.Value / 100f;
             scene.Light.Specular = val;
             specularLabel.Text = "Specular: " + String.Format("{0:0.00}", val);
+            Repaint();
         }
 
         private void shinessNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Light.Shiness = (float)shinessNUD.Value;
+            Repaint();
         }
 
         private void aspectNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Aspect = (float)aspectNUD.Value;
+            Repaint();
         }
 
         private void fieldOfViewNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.FieldOfView = (float)fieldOfViewNUD.Value;
+            Repaint();
         }
 
         private void farNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Far = (float)farNUD.Value;
+            Repaint();
         }
 
         private void nearNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Near = (float)nearNUD.Value;
+            Repaint();
         }
 
         private void backgroundColorButton_Click(object sender, EventArgs e)
@@ -323,6 +320,7 @@ namespace GK4
             {
                 scene.Background = colorDialog1.Color;
                 backgroundColorLabel.BackColor = colorDialog1.Color;
+                Repaint();
             }
         }
 
@@ -333,52 +331,62 @@ namespace GK4
             {
                 scene.Light.Colour = colorDialog1.Color;
                 lightColorLabel.BackColor = colorDialog1.Color;
+                Repaint();
             }
         }
 
         private void targetXNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Camera.Target[0] = (float)targetXNUD.Value;
+            Repaint();
         }
 
         private void targetYNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Camera.Target[1] = (float)targetYNUD.Value;
+            Repaint();
         }
 
         private void targetZNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Camera.Target[2] = (float)targetZNUD.Value;
+            Repaint();
         }
 
         private void positionXNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Camera.Position[0] = (float)positionXNUD.Value;
+            Repaint();
         }
 
         private void positionYNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Camera.Position[1] = (float)positionYNUD.Value;
+            Repaint();
         }
 
         private void positionZNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Camera.Position[2] = (float)positionZNUD.Value;
+            Repaint();
         }
 
         private void lightXNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Light.Position[0] = (float)lightXNUD.Value;
+            Repaint();
         }
 
         private void lightYNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Light.Position[1] = (float)lightYNUD.Value;
+            Repaint();
         }
 
         private void lightZNUD_ValueChanged(object sender, EventArgs e)
         {
             scene.Light.Position[2] = (float)lightZNUD.Value;
+            Repaint();
         }
 
         private void addButton_Click(object sender, EventArgs e)
@@ -393,6 +401,7 @@ namespace GK4
                 scene.Figures.Add(result);
                 comboBox1.DataSource = null;
                 comboBox1.DataSource = scene.Figures;
+                Repaint();
             }
 
         }
@@ -404,9 +413,103 @@ namespace GK4
             comboBox1.DataSource = null;
             comboBox1.DataSource = scene.Figures;
             if (comboBox1.Items.Count != 0)
+            {
+                selectedFigure = scene.Figures[0];
                 comboBox1.SelectedIndex = 0;
+            }
+            else
+            {
+                selectedFigure = null;
+            }
+            Repaint();
         }
 
-       
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex != -1)
+            {
+                selectedFigure = scene.Figures[comboBox1.SelectedIndex];
+                SetEdit(scene.Figures[comboBox1.SelectedIndex]);
+            }
+        }
+
+        private void xTranslationNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Xtranslation = (float)xTranslationNUD.Value;
+            Repaint();
+        }
+
+        private void yTranslationNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Ytranslation = (float)yTranslationNUD.Value;
+            Repaint();
+        }
+
+        private void zTranslationNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Ztranslation = (float)zTranslationNUD.Value;
+            Repaint();
+        }
+
+        private void xRotationNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Xturn = (float)xRotationNUD.Value;
+            Repaint();
+        }
+
+        private void yRotationNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Yturn = (float)yRotationNUD.Value;
+            Repaint();
+        }
+
+        private void zRotationNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Zturn = (float)zRotationNUD.Value;
+            Repaint();
+        }
+
+        private void xScaleNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Xscale = (float)xScaleNUD.Value;
+            Repaint();
+        }
+
+        private void yScaleNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Yscale = (float)yScaleNUD.Value;
+            Repaint();
+        }
+
+        private void zScaleNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedFigure != null)
+                selectedFigure.Zscale = (float)zScaleNUD.Value;
+            Repaint();
+        }
+
+        private void noFillRB_CheckedChanged(object sender, EventArgs e)
+        {
+            Repaint();
+        }
+
+        private void flatFillRB_CheckedChanged(object sender, EventArgs e)
+        {
+            Repaint();
+        }
+
+        private void gouraudFillRB_CheckedChanged(object sender, EventArgs e)
+        {
+            Repaint();
+        }
     }
 }

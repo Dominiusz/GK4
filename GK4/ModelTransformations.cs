@@ -9,6 +9,8 @@ namespace GK4
 {
     public class ModelTransformations
     {
+        private const float pi = (float) Math.PI;
+
         public static Matrix GetTranslationMatrix(float x, float y, float z)
         {
             Matrix ret = Matrix.GetIdentityMatrix(4);
@@ -30,8 +32,10 @@ namespace GK4
         public static Matrix GetXTurnMatrix(float angle)
         {
             Matrix ret = Matrix.GetIdentityMatrix(4);
-            float cos = (float)Math.Cos(angle);
-            float sin = (float)Math.Sin(angle);
+            float angleRad = angle * pi / 180;
+            
+            float cos = (float)Math.Cos(angleRad);
+            float sin = (float)Math.Sin(angleRad);
             ret[1, 1] = cos;
             ret[2, 2] = cos;
             ret[2, 1] = sin;
@@ -42,8 +46,10 @@ namespace GK4
         public static Matrix GetYTurnMatrix(float angle)
         {
             Matrix ret = Matrix.GetIdentityMatrix(4);
-            float cos = (float)Math.Cos(angle);
-            float sin = (float)Math.Sin(angle);
+
+            float angleRad = angle * pi / 180;
+            float cos = (float)Math.Cos(angleRad);
+            float sin = (float)Math.Sin(angleRad);
             ret[0, 0] = cos;
             ret[2, 2] = cos;
             ret[0, 2] = sin;
@@ -54,8 +60,10 @@ namespace GK4
         public static Matrix GetZTurnMatrix(float angle)
         {
             Matrix ret = Matrix.GetIdentityMatrix(4);
-            float cos = (float)Math.Cos(angle);
-            float sin = (float)Math.Sin(angle);
+
+            float angleRad = angle * pi / 180;
+            float cos = (float)Math.Cos(angleRad);
+            float sin = (float)Math.Sin(angleRad);
             ret[0, 0] = cos;
             ret[1, 1] = cos;
             ret[1, 0] = sin;

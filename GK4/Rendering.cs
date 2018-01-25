@@ -10,9 +10,9 @@ namespace GK4
 {
     class Rendering
     {
-        private float[,] ZBuffer;
+        public float[,] ZBuffer;
 
-        public Rendering(float[,] zbuffer)
+        public Rendering(ref float[,] zbuffer)
         {
             ZBuffer = zbuffer;
         }

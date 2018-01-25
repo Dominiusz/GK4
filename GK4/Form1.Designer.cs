@@ -28,24 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.zTranslationNUD = new System.Windows.Forms.NumericUpDown();
+            this.yTranslationNUD = new System.Windows.Forms.NumericUpDown();
+            this.xTranslationNUD = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
+            this.zScaleNUD = new System.Windows.Forms.NumericUpDown();
+            this.yScaleNUD = new System.Windows.Forms.NumericUpDown();
+            this.xScaleNUD = new System.Windows.Forms.NumericUpDown();
+            this.zRotationNUD = new System.Windows.Forms.NumericUpDown();
+            this.yRotationNUD = new System.Windows.Forms.NumericUpDown();
+            this.xRotationNUD = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.deleteButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
@@ -98,17 +97,20 @@
             this.loadbutton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zTranslationNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yTranslationNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xTranslationNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zScaleNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yScaleNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xScaleNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zRotationNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yRotationNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xRotationNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lightZNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lightYNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lightXNUD)).BeginInit();
@@ -126,17 +128,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.specularTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.diffuseTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ambientTrackBar)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(95, 8);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 47);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // pictureBox1
             // 
@@ -154,21 +147,9 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label14);
-            this.panel1.Controls.Add(this.label15);
-            this.panel1.Controls.Add(this.label16);
-            this.panel1.Controls.Add(this.label17);
-            this.panel1.Controls.Add(this.numericUpDown1);
-            this.panel1.Controls.Add(this.numericUpDown2);
-            this.panel1.Controls.Add(this.numericUpDown3);
-            this.panel1.Controls.Add(this.label18);
-            this.panel1.Controls.Add(this.label19);
-            this.panel1.Controls.Add(this.numericUpDown4);
-            this.panel1.Controls.Add(this.numericUpDown5);
-            this.panel1.Controls.Add(this.numericUpDown6);
-            this.panel1.Controls.Add(this.numericUpDown7);
-            this.panel1.Controls.Add(this.numericUpDown8);
-            this.panel1.Controls.Add(this.numericUpDown9);
+            this.panel1.Controls.Add(this.label21);
+            this.panel1.Controls.Add(this.label20);
+            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.label13);
             this.panel1.Controls.Add(this.deleteButton);
             this.panel1.Controls.Add(this.addButton);
@@ -220,7 +201,6 @@
             this.panel1.Controls.Add(this.newSceneButton);
             this.panel1.Controls.Add(this.loadbutton);
             this.panel1.Controls.Add(this.saveButton);
-            this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel1.Location = new System.Drawing.Point(807, 0);
             this.panel1.Name = "panel1";
@@ -230,7 +210,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(237, 114);
+            this.label14.Location = new System.Drawing.Point(44, 13);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(83, 17);
             this.label14.TabIndex = 81;
@@ -240,7 +220,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label15.Location = new System.Drawing.Point(198, 196);
+            this.label15.Location = new System.Drawing.Point(5, 95);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(23, 17);
             this.label15.TabIndex = 80;
@@ -250,7 +230,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label16.Location = new System.Drawing.Point(198, 169);
+            this.label16.Location = new System.Drawing.Point(5, 68);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(23, 17);
             this.label16.TabIndex = 79;
@@ -260,70 +240,73 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label17.Location = new System.Drawing.Point(198, 141);
+            this.label17.Location = new System.Drawing.Point(5, 40);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(23, 17);
             this.label17.TabIndex = 78;
             this.label17.Text = "X:";
             // 
-            // numericUpDown1
+            // zTranslationNUD
             // 
-            this.numericUpDown1.DecimalPlaces = 1;
-            this.numericUpDown1.Location = new System.Drawing.Point(246, 194);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.zTranslationNUD.DecimalPlaces = 2;
+            this.zTranslationNUD.Location = new System.Drawing.Point(53, 93);
+            this.zTranslationNUD.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.zTranslationNUD.Minimum = new decimal(new int[] {
             20,
             0,
             0,
             -2147483648});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(67, 22);
-            this.numericUpDown1.TabIndex = 77;
+            this.zTranslationNUD.Name = "zTranslationNUD";
+            this.zTranslationNUD.Size = new System.Drawing.Size(67, 22);
+            this.zTranslationNUD.TabIndex = 77;
+            this.zTranslationNUD.ValueChanged += new System.EventHandler(this.zTranslationNUD_ValueChanged);
             // 
-            // numericUpDown2
+            // yTranslationNUD
             // 
-            this.numericUpDown2.DecimalPlaces = 1;
-            this.numericUpDown2.Location = new System.Drawing.Point(246, 167);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.yTranslationNUD.DecimalPlaces = 2;
+            this.yTranslationNUD.Location = new System.Drawing.Point(53, 66);
+            this.yTranslationNUD.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
+            this.yTranslationNUD.Minimum = new decimal(new int[] {
             20,
             0,
             0,
             -2147483648});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(67, 22);
-            this.numericUpDown2.TabIndex = 76;
+            this.yTranslationNUD.Name = "yTranslationNUD";
+            this.yTranslationNUD.Size = new System.Drawing.Size(67, 22);
+            this.yTranslationNUD.TabIndex = 76;
+            this.yTranslationNUD.ValueChanged += new System.EventHandler(this.yTranslationNUD_ValueChanged);
             // 
-            // numericUpDown3
+            // xTranslationNUD
             // 
-            this.numericUpDown3.DecimalPlaces = 1;
-            this.numericUpDown3.Location = new System.Drawing.Point(246, 139);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.xTranslationNUD.DecimalPlaces = 2;
+            this.xTranslationNUD.Location = new System.Drawing.Point(53, 38);
+            this.xTranslationNUD.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
+            this.xTranslationNUD.Minimum = new decimal(new int[] {
             20,
             0,
             0,
             -2147483648});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(67, 22);
-            this.numericUpDown3.TabIndex = 75;
+            this.xTranslationNUD.Name = "xTranslationNUD";
+            this.xTranslationNUD.Size = new System.Drawing.Size(67, 22);
+            this.xTranslationNUD.TabIndex = 75;
+            this.xTranslationNUD.ValueChanged += new System.EventHandler(this.xTranslationNUD_ValueChanged);
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(404, 114);
+            this.label18.Location = new System.Drawing.Point(211, 13);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(47, 17);
             this.label18.TabIndex = 74;
@@ -332,119 +315,107 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(326, 114);
+            this.label19.Location = new System.Drawing.Point(133, 13);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(65, 17);
             this.label19.TabIndex = 73;
             this.label19.Text = "Rotation:";
             // 
-            // numericUpDown4
+            // zScaleNUD
             // 
-            this.numericUpDown4.DecimalPlaces = 1;
-            this.numericUpDown4.Location = new System.Drawing.Point(401, 194);
-            this.numericUpDown4.Maximum = new decimal(new int[] {
+            this.zScaleNUD.DecimalPlaces = 2;
+            this.zScaleNUD.Location = new System.Drawing.Point(208, 93);
+            this.zScaleNUD.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericUpDown4.Minimum = new decimal(new int[] {
+            this.zScaleNUD.Minimum = new decimal(new int[] {
             20,
             0,
             0,
             -2147483648});
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(64, 22);
-            this.numericUpDown4.TabIndex = 66;
+            this.zScaleNUD.Name = "zScaleNUD";
+            this.zScaleNUD.Size = new System.Drawing.Size(64, 22);
+            this.zScaleNUD.TabIndex = 66;
+            this.zScaleNUD.ValueChanged += new System.EventHandler(this.zScaleNUD_ValueChanged);
             // 
-            // numericUpDown5
+            // yScaleNUD
             // 
-            this.numericUpDown5.DecimalPlaces = 1;
-            this.numericUpDown5.Location = new System.Drawing.Point(400, 167);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
+            this.yScaleNUD.DecimalPlaces = 2;
+            this.yScaleNUD.Location = new System.Drawing.Point(207, 66);
+            this.yScaleNUD.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericUpDown5.Minimum = new decimal(new int[] {
+            this.yScaleNUD.Minimum = new decimal(new int[] {
             20,
             0,
             0,
             -2147483648});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(64, 22);
-            this.numericUpDown5.TabIndex = 65;
+            this.yScaleNUD.Name = "yScaleNUD";
+            this.yScaleNUD.Size = new System.Drawing.Size(64, 22);
+            this.yScaleNUD.TabIndex = 65;
+            this.yScaleNUD.ValueChanged += new System.EventHandler(this.yScaleNUD_ValueChanged);
             // 
-            // numericUpDown6
+            // xScaleNUD
             // 
-            this.numericUpDown6.DecimalPlaces = 1;
-            this.numericUpDown6.Location = new System.Drawing.Point(400, 139);
-            this.numericUpDown6.Maximum = new decimal(new int[] {
+            this.xScaleNUD.DecimalPlaces = 2;
+            this.xScaleNUD.Location = new System.Drawing.Point(207, 38);
+            this.xScaleNUD.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericUpDown6.Minimum = new decimal(new int[] {
+            this.xScaleNUD.Minimum = new decimal(new int[] {
             20,
             0,
             0,
             -2147483648});
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(65, 22);
-            this.numericUpDown6.TabIndex = 64;
+            this.xScaleNUD.Name = "xScaleNUD";
+            this.xScaleNUD.Size = new System.Drawing.Size(65, 22);
+            this.xScaleNUD.TabIndex = 64;
+            this.xScaleNUD.ValueChanged += new System.EventHandler(this.xScaleNUD_ValueChanged);
             // 
-            // numericUpDown7
+            // zRotationNUD
             // 
-            this.numericUpDown7.DecimalPlaces = 1;
-            this.numericUpDown7.Location = new System.Drawing.Point(328, 194);
-            this.numericUpDown7.Maximum = new decimal(new int[] {
-            20,
+            this.zRotationNUD.Location = new System.Drawing.Point(135, 93);
+            this.zRotationNUD.Maximum = new decimal(new int[] {
+            359,
             0,
             0,
             0});
-            this.numericUpDown7.Minimum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(63, 22);
-            this.numericUpDown7.TabIndex = 63;
+            this.zRotationNUD.Name = "zRotationNUD";
+            this.zRotationNUD.Size = new System.Drawing.Size(63, 22);
+            this.zRotationNUD.TabIndex = 63;
+            this.zRotationNUD.ValueChanged += new System.EventHandler(this.zRotationNUD_ValueChanged);
             // 
-            // numericUpDown8
+            // yRotationNUD
             // 
-            this.numericUpDown8.DecimalPlaces = 1;
-            this.numericUpDown8.Location = new System.Drawing.Point(328, 167);
-            this.numericUpDown8.Maximum = new decimal(new int[] {
-            20,
+            this.yRotationNUD.Location = new System.Drawing.Point(135, 66);
+            this.yRotationNUD.Maximum = new decimal(new int[] {
+            359,
             0,
             0,
             0});
-            this.numericUpDown8.Minimum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(63, 22);
-            this.numericUpDown8.TabIndex = 62;
+            this.yRotationNUD.Name = "yRotationNUD";
+            this.yRotationNUD.Size = new System.Drawing.Size(63, 22);
+            this.yRotationNUD.TabIndex = 62;
+            this.yRotationNUD.ValueChanged += new System.EventHandler(this.yRotationNUD_ValueChanged);
             // 
-            // numericUpDown9
+            // xRotationNUD
             // 
-            this.numericUpDown9.DecimalPlaces = 1;
-            this.numericUpDown9.Location = new System.Drawing.Point(328, 139);
-            this.numericUpDown9.Maximum = new decimal(new int[] {
-            20,
+            this.xRotationNUD.Location = new System.Drawing.Point(135, 38);
+            this.xRotationNUD.Maximum = new decimal(new int[] {
+            359,
             0,
             0,
             0});
-            this.numericUpDown9.Minimum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown9.Name = "numericUpDown9";
-            this.numericUpDown9.Size = new System.Drawing.Size(63, 22);
-            this.numericUpDown9.TabIndex = 61;
+            this.xRotationNUD.Name = "xRotationNUD";
+            this.xRotationNUD.Size = new System.Drawing.Size(63, 22);
+            this.xRotationNUD.TabIndex = 61;
+            this.xRotationNUD.ValueChanged += new System.EventHandler(this.xRotationNUD_ValueChanged);
             // 
             // label13
             // 
@@ -483,6 +454,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(164, 24);
             this.comboBox1.TabIndex = 57;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // gouraudFillRB
             // 
@@ -493,6 +465,7 @@
             this.gouraudFillRB.TabIndex = 56;
             this.gouraudFillRB.Text = "Gouraud filling";
             this.gouraudFillRB.UseVisualStyleBackColor = true;
+            this.gouraudFillRB.CheckedChanged += new System.EventHandler(this.gouraudFillRB_CheckedChanged);
             // 
             // flatFillRB
             // 
@@ -503,6 +476,7 @@
             this.flatFillRB.TabIndex = 55;
             this.flatFillRB.Text = "Flat filling";
             this.flatFillRB.UseVisualStyleBackColor = true;
+            this.flatFillRB.CheckedChanged += new System.EventHandler(this.flatFillRB_CheckedChanged);
             // 
             // noFillRB
             // 
@@ -515,6 +489,7 @@
             this.noFillRB.TabStop = true;
             this.noFillRB.Text = "No filling";
             this.noFillRB.UseVisualStyleBackColor = true;
+            this.noFillRB.CheckedChanged += new System.EventHandler(this.noFillRB_CheckedChanged);
             // 
             // label12
             // 
@@ -993,9 +968,9 @@
             // 
             // newSceneButton
             // 
-            this.newSceneButton.Location = new System.Drawing.Point(328, 555);
+            this.newSceneButton.Location = new System.Drawing.Point(360, 558);
             this.newSceneButton.Name = "newSceneButton";
-            this.newSceneButton.Size = new System.Drawing.Size(123, 35);
+            this.newSceneButton.Size = new System.Drawing.Size(160, 35);
             this.newSceneButton.TabIndex = 9;
             this.newSceneButton.Text = "New scene";
             this.newSceneButton.UseVisualStyleBackColor = true;
@@ -1003,9 +978,9 @@
             // 
             // loadbutton
             // 
-            this.loadbutton.Location = new System.Drawing.Point(176, 555);
+            this.loadbutton.Location = new System.Drawing.Point(190, 558);
             this.loadbutton.Name = "loadbutton";
-            this.loadbutton.Size = new System.Drawing.Size(137, 35);
+            this.loadbutton.Size = new System.Drawing.Size(160, 35);
             this.loadbutton.TabIndex = 8;
             this.loadbutton.Text = "Load";
             this.loadbutton.UseVisualStyleBackColor = true;
@@ -1013,13 +988,55 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(22, 555);
+            this.saveButton.Location = new System.Drawing.Point(20, 558);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(134, 35);
+            this.saveButton.Size = new System.Drawing.Size(160, 35);
             this.saveButton.TabIndex = 7;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // panel2
+            // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.label14);
+            this.panel2.Controls.Add(this.zRotationNUD);
+            this.panel2.Controls.Add(this.label19);
+            this.panel2.Controls.Add(this.label18);
+            this.panel2.Controls.Add(this.zScaleNUD);
+            this.panel2.Controls.Add(this.xTranslationNUD);
+            this.panel2.Controls.Add(this.label15);
+            this.panel2.Controls.Add(this.yScaleNUD);
+            this.panel2.Controls.Add(this.yTranslationNUD);
+            this.panel2.Controls.Add(this.xRotationNUD);
+            this.panel2.Controls.Add(this.xScaleNUD);
+            this.panel2.Controls.Add(this.zTranslationNUD);
+            this.panel2.Controls.Add(this.label16);
+            this.panel2.Controls.Add(this.label17);
+            this.panel2.Controls.Add(this.yRotationNUD);
+            this.panel2.Location = new System.Drawing.Point(208, 98);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(289, 132);
+            this.panel2.TabIndex = 5;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label20.Location = new System.Drawing.Point(297, 50);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(98, 25);
+            this.label20.TabIndex = 61;
+            this.label20.Text = "Edit figure";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(20, 268);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(48, 17);
+            this.label21.TabIndex = 62;
+            this.label21.Text = "Filling:";
             // 
             // Form1
             // 
@@ -1028,20 +1045,21 @@
             this.ClientSize = new System.Drawing.Size(1338, 598);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
+            this.MinimumSize = new System.Drawing.Size(700, 645);
             this.Name = "Form1";
             this.Text = "GK4";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zTranslationNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yTranslationNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xTranslationNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zScaleNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yScaleNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xScaleNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zRotationNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yRotationNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xRotationNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lightZNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lightYNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lightXNUD)).EndInit();
@@ -1059,13 +1077,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.specularTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.diffuseTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ambientTrackBar)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button newSceneButton;
@@ -1124,17 +1142,20 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.NumericUpDown zTranslationNUD;
+        private System.Windows.Forms.NumericUpDown yTranslationNUD;
+        private System.Windows.Forms.NumericUpDown xTranslationNUD;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
-        private System.Windows.Forms.NumericUpDown numericUpDown7;
-        private System.Windows.Forms.NumericUpDown numericUpDown8;
-        private System.Windows.Forms.NumericUpDown numericUpDown9;
+        private System.Windows.Forms.NumericUpDown zScaleNUD;
+        private System.Windows.Forms.NumericUpDown yScaleNUD;
+        private System.Windows.Forms.NumericUpDown xScaleNUD;
+        private System.Windows.Forms.NumericUpDown zRotationNUD;
+        private System.Windows.Forms.NumericUpDown yRotationNUD;
+        private System.Windows.Forms.NumericUpDown xRotationNUD;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
     }
 }
 
