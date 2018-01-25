@@ -20,19 +20,71 @@ namespace GK4
     public partial class Form1 : Form
     {
         private Scene scene;
+        private Rendering rendering;
 
-        private int XXX = 0;
-        Light light = new Light();
         private float[,] ZBuffer;
-        private Triangle T;
-        private Camera cam = new Camera();
+
 
         public Form1()
         {
             InitializeComponent();
-            FillSceneBlack();
+            FillScene(Color.Black);
             scene = new Scene();
             //pictureBox1.Image = new Bitmap("C:\\Users\\450 G2\\Desktop\\Obrazki\\Bez tytułu — kopia.png");
+
+            SetDefaultValues();
+
+
+        }
+
+        private void SetFromSaved()
+        {
+            ambientTrackBar.Value = (int)(scene.Light.Ambient * 100);
+            diffuseTrackBar.Value = (int)(scene.Light.Diffuse * 100);
+            specularTrackBar.Value = (int)(scene.Light.Specular * 100);
+            shinessNUD.Value = (decimal)scene.Light.Shiness;
+            aspectNUD.Value = (decimal)scene.Aspect;
+            farNUD.Value = (decimal)scene.Far;
+            nearNUD.Value = (decimal)scene.Near;
+            fieldOfViewNUD.Value = (decimal)scene.FieldOfView;
+            targetXNUD.Value = (decimal)scene.Camera.Target[0];
+            targetYNUD.Value = (decimal)scene.Camera.Target[1];
+            targetZNUD.Value = (decimal)scene.Camera.Target[2];
+            positionXNUD.Value = (decimal)scene.Camera.Position[0];
+            positionYNUD.Value = (decimal)scene.Camera.Position[1];
+            positionZNUD.Value = (decimal)scene.Camera.Position[2];
+            lightXNUD.Value = (decimal)scene.Light.Position[0];
+            lightYNUD.Value = (decimal)scene.Light.Position[1];
+            lightZNUD.Value = (decimal)scene.Light.Position[2];
+
+            lightColorLabel.BackColor = scene.Light.Colour;
+            backgroundColorLabel.BackColor = scene.Background;
+            RunEvents();
+        }
+
+        private void RunEvents()
+        {
+            ambientTrackBar_Scroll(null, null);
+            diffuseTrackBar_Scroll(null, null);
+            specularTrackBar_Scroll(null, null);
+            shinessNUD_ValueChanged(null, null);
+            farNUD_ValueChanged(null, null);
+            nearNUD_ValueChanged(null, null);
+            fieldOfViewNUD_ValueChanged(null, null);
+            targetXNUD_ValueChanged(null, null);
+            targetYNUD_ValueChanged(null, null);
+            targetZNUD_ValueChanged(null, null);
+            positionXNUD_ValueChanged(null, null);
+            positionYNUD_ValueChanged(null, null);
+            positionZNUD_ValueChanged(null, null);
+            lightXNUD_ValueChanged(null, null);
+            lightYNUD_ValueChanged(null, null);
+            lightZNUD_ValueChanged(null, null);
+
+        }
+
+        private void SetDefaultValues()
+        {
             ambientTrackBar.Value = 80;
             diffuseTrackBar.Value = 80;
             specularTrackBar.Value = 80;
@@ -42,11 +94,28 @@ namespace GK4
             farNUD.Value = 100;
             nearNUD.Value = 1;
             fieldOfViewNUD.Value = 45;
-
+            targetXNUD.Increment = 0.1M;
+            targetXNUD.Value = 0M;
+            targetYNUD.Increment = 0.1M;
+            targetYNUD.Value = new decimal(0.5);
+            targetZNUD.Increment = 0.1M;
+            targetZNUD.Value = 0M;
+            positionXNUD.Increment = 0.1M;
+            positionXNUD.Value = 0M;
+            positionYNUD.Increment = 0.1M;
+            positionYNUD.Value = 1M;
+            positionZNUD.Increment = 0.1M;
+            positionZNUD.Value = 2M;
+            lightXNUD.Increment = 0.1M;
+            lightXNUD.Value = 1M;
+            lightYNUD.Increment = 0.1M;
+            lightYNUD.Value = 2M;
+            lightZNUD.Increment = 0.1M;
+            lightZNUD.Value = 1M;
 
         }
 
-        private void FillSceneBlack()
+        private void FillScene(Color color)
         {
             if (pictureBox1.Image == null)
             {
@@ -57,7 +126,7 @@ namespace GK4
             byte[] bitmapData = ms.GetBuffer();
 
             const int BITMAP_HEADER_OFFSET = 54;
-            Color colorValue = Color.Black;
+            Color colorValue = color;
 
             for (int i = 0; i < bitmapData.Length - BITMAP_HEADER_OFFSET; i += 4)
             {
@@ -82,18 +151,18 @@ namespace GK4
         private void button1_Click(object sender, EventArgs e)
         {
 
-            scene.Camera.Position = new Vector(0f, 2, 3, 1);
-            scene.Camera.Target = new Vector(0, 0.5f, 0, 1);
-            scene.Camera.UpWorld = new Vector(0, 1, 0);
+            //  scene.Camera.Position = new Vector(0f, 2, 3, 1);
+            //  scene.Camera.Target = new Vector(0, 0.5f, 0, 1);
+            //  scene.Camera.UpWorld = new Vector(0, 1, 0);
             Cube cube = new Cube();
             Cone cone = new Cone(16);
             Cylinder cylinder = new Cylinder(20);
-            scene.Light.Colour=Color.Crimson;
-            scene.Light.Position= new Vector(0,1,1,1);
+            //scene.Light.Colour = Color.Crimson;
+            // scene.Light.Position = new Vector(0, 1, 1, 1);
 
             Rendering R = new Rendering(ZBuffer);
 
-            scene.Figures.Add(cone);
+    //        scene.Figures.Add(cone);
             Bitmap PBbtmap = pictureBox1.Image as Bitmap;
 
             R.RenderGouraud(scene, ref PBbtmap);
@@ -103,105 +172,8 @@ namespace GK4
             //  cone.Ytranslation = 1;
             // RenderGouraud(cone, cam);
             //Render(cone, cam);
-
-
-
-
         }
 
-
-        private void RenderFlat(Figure figure, Camera _cam)
-        {
-            //int xxx = 0;
-            Matrix View = _cam.GetViewMatrix();
-            Matrix Proj = null; //GetProjectionMatrix(n, f, fov, aspect);
-            Matrix PVM = Matrix.Multiply(Proj, View);
-            Bitmap B = pictureBox1.Image as Bitmap;
-
-
-            //var M = Matrix.Multiply(ModelTransformations.GetTranslationMatrix(0, 0.5f, 0),ModelTransformations.GetXTurnMatrix(20));
-            // PVM = Matrix.Multiply(PVM, M);
-
-
-            foreach (var T in figure.triangles)
-            {
-                Vector v1 = Matrix.Multiply(PVM, T[0]);
-                Vector v2 = Matrix.Multiply(PVM, T[1]);
-                Vector v3 = Matrix.Multiply(PVM, T[2]);
-
-                Vector n1 = Matrix.Multiply(PVM, T.normals[0]);
-                Vector n2 = Matrix.Multiply(PVM, T.normals[1]);
-                Vector n3 = Matrix.Multiply(PVM, T.normals[2]);
-
-                n1.Normalize();
-                n2.Normalize();
-                n3.Normalize();
-
-                float distance = 0; //CalculateDistance3D(T[0], cam.Position);
-                Vector toLightVersor = (light.Position - T[0]).Normalize();
-                Vector toObserver = (cam.Position - T[0]).Normalize();
-
-                Color
-                    triangleColor =
-                        Color.Aqua; //CalculateColor(toLightVersor, T.normals[0].Normalize(), toObserver, distance);
-
-                // if (Vector.DotProduct(v1 - cam.Position, n1) < 0)
-                //     continue;
-
-                //Vector N = Vector.CrossProduct((v2-v1),(v3-v1));
-                //if(Vector.DotProduct(v1,N)<0)
-                //    continue;
-
-                int W = pictureBox1.Width;
-                int H = pictureBox1.Height;
-
-                float v1x = v1[0] / v1[3];
-                float v1y = v1[1] / v1[3];
-                float v1z = v1[2] / v1[3];
-                float v2x = v2[0] / v2[3];
-                float v2y = v2[1] / v2[3];
-                float v2z = v2[2] / v2[3];
-                float v3x = v3[0] / v3[3];
-                float v3y = v3[1] / v3[3];
-                float v3z = v3[2] / v3[3];
-
-                v1x = (v1x + 1) * W / 2;
-                v1y = -(v1y - 1) * H / 2;
-                v1z = (v1z + 1) / 2;
-                v2x = (v2x + 1) * W / 2;
-                v2y = -(v2y - 1) * H / 2;
-                v2z = (v2z + 1) / 2;
-                v3x = (v3x + 1) * W / 2;
-                v3y = -(v3y - 1) * H / 2;
-                v3z = (v3z + 1) / 2;
-
-                /*       List<PointF> list = new List<PointF>();
-                       list.Add(new PointF(v1x, v1y));
-                       list.Add(new PointF(v2x, v2y));
-                       list.Add(new PointF(v3x, v3y));
-                */
-                // Graphics G = pictureBox1.CreateGraphics();
-                // G.FillPolygon(Brushes.Blue, list.ToArray());
-                // G.Dispose();
-
-                //  Pen p = new Pen(Color.Blue, 1);
-                //   Graphics G = pictureBox1.CreateGraphics();
-                //  G.DrawPolygon(p, list.ToArray());
-                //  G.Dispose();
-
-                FillTriangle(ref B, new Triangle(v1x, v1y, v1z, v2x, v2y, v2z, v3x, v3y, v3z), triangleColor);
-                //     MyDrawLine(ref B, (int)v1x, (int)v1y, (int)v2x, (int)v2y, Color.BlueViolet);
-                //     MyDrawLine(ref B, (int)v2x, (int)v2y, (int)v3x, (int)v3y, Color.BlueViolet);
-                //     MyDrawLine(ref B, (int)v3x, (int)v3y, (int)v1x, (int)v1y, Color.BlueViolet);      
-                //    if (xxx == XXX)
-                //    {
-                //        XXX++;
-                //        break;
-                //    }
-                //    xxx++;
-            }
-            pictureBox1.Image = B;
-        }
 
 
 
@@ -223,169 +195,6 @@ namespace GK4
             //RenderGouraud(Tri,cam);
 
         }
-
-        public void FillTriangle(ref Bitmap B, Triangle T, Color C)
-        {
-            float x1f, y1f, x2f, y2f, x3f, y3f, z1f, z2f, z3f;
-
-            List<Vector> sorted = new List<Vector>();
-            sorted.Add(T[0]);
-            sorted.Add(T[1]);
-            sorted.Add(T[2]);
-            sorted.Sort((v1, v2) => v1[1].CompareTo(v2[1]));
-
-            x1f = sorted[0][0];
-            y1f = sorted[0][1];
-            z1f = sorted[0][2];
-
-            x2f = sorted[1][0];
-            y2f = sorted[1][1];
-            z2f = sorted[1][2];
-
-            x3f = sorted[2][0];
-            y3f = sorted[2][1];
-            z3f = sorted[2][2];
-
-            int y1 = (int) y1f;
-            int y2 = (int) y2f;
-            int y3 = (int) y3f;
-            int x1 = (int) x1f;
-            int x2 = (int) x2f;
-            int x3 = (int) x3f;
-
-            int x4 = (int) (x1f + (y2f - y1f) / (y3f - y1f) * (x3f - x1f));
-            int y4 = (int) y2f;
-            float q = 0; //CalculateDistance2D(x1, y1, x4, y4) / CalculateDistance2D(x1, y1, x3, y3);
-            float z4f = z1f * (1 - q) + z3f * q;
-
-            if (y2 == y3)
-            {
-                FillBottomFlatTriangle(ref B, C, x1, y1, z1f, x2, y2, z2f, x3, y3, z3f);
-            }
-            else if (y1 == y2)
-            {
-                FillTopFlatTriangle(ref B, C, x1, y1, z1f, x2, y2, z2f, x3, y3, z3f);
-            }
-            else
-            {
-
-                FillBottomFlatTriangle(ref B, C, x1, y1, z1f, x2, y2, z2f, x4, y4, z4f);
-                FillTopFlatTriangle(ref B, C, x2, y2, z2f, x4, y4, z4f, x3, y3, z3f);
-            }
-        }
-
-        public void FillBottomFlatTriangle(ref Bitmap B, Color C, int x1, int y1, float z1f, int x2, int y2, float z2f,
-            int x3, int y3, float z3f)
-        {
-            if (x2 > x3)
-            {
-                int tmp = x2;
-                x2 = x3;
-                x3 = tmp;
-                tmp = y2;
-                y2 = y3;
-                y3 = tmp;
-                float tmpf = z2f;
-                z2f = z3f;
-                z3f = tmpf;
-            }
-
-            double dy1 = (double) (x2 - x1) / (y2 - y1);
-            double dy2 = (double) (x3 - x1) / (y3 - y1);
-
-            double curr1 = x1;
-            double curr2 = x1;
-
-            float currZ1; //= z1f;
-            float currZ2; //= z2f;
-            float Z;
-
-            for (int i = y1; i <= y2; i++)
-            {
-                float q = 00000000000; //CalculateDistance2D(curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x2, y2);
-                currZ1 = z1f * (1 - q) + z2f * q;
-                q = 00000000000; //CalculateDistance2D(curr2, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
-                currZ2 = z1f * (1 - q) + z3f * q;
-
-                for (int j = (int) curr1; j <= (int) curr2; j++)
-                {
-                    if (j < -1000)
-                    {
-                        //      if (Math.Abs(curr1) > 3000)
-                        //          return;
-                        break;
-
-                    }
-                    q = 000000000; //CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
-                    Z = currZ1 * (1 - q) + currZ2 * q;
-                    if (j > -1 && i > -1 && j < B.Width && i < B.Height && Z > ZBuffer[j, i])
-                    {
-                        ZBuffer[j, i] = Z;
-                        B.SetPixel(j, i, C);
-                    } //MyDrawLine(ref B, (int)curr1, i, (int)curr2, i, C);
-                }
-                curr1 += dy1;
-                curr2 += dy2;
-            }
-        }
-
-        public void FillTopFlatTriangle(ref Bitmap B, Color C, int x1, int y1, float z1f, int x2, int y2, float z2f,
-            int x3, int y3, float z3f)
-        {
-            if (x1 > x2)
-            {
-                int tmp = x1;
-                x1 = x2;
-                x2 = tmp;
-                tmp = y1;
-                y1 = y2;
-                y2 = tmp;
-                float tmpf = z1f;
-                z1f = z2f;
-                z2f = tmpf;
-            }
-
-            double dy1 = (double) (x3 - x1) / (y3 - y1);
-            double dy2 = (double) (x3 - x2) / (y3 - y2);
-
-            double curr1 = x3;
-            double curr2 = x3;
-
-            float currZ1;
-            float currZ2;
-            float Z;
-
-            /*          for (int i = y3; i > y1; i--)
-                      {
-                          float q = CalculateDistance2D(curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
-                          currZ1 = z3f * (1 - q) + z1f * q;
-                          q = CalculateDistance2D(curr2, i, x3, y3) / CalculateDistance2D(x2, y2, x3, y3);
-                          currZ2 = z3f * (1 - q) + z2f * q;
-          
-                          for (int j = (int)curr1; j <= (int)curr2; j++)
-                          {
-                              q = CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
-                              Z = currZ1 * (1 - q) + currZ2 * q;
-                              if (j < -1000)
-                              {
-                                  //   if (Math.Abs(curr1) > 3000)
-                                  //       return;
-                                  break;
-                              }
-                              if (j > -1 && i > -1 && j < B.Width && i < B.Height && Z > ZBuffer[j, i])
-                              {
-                                  ZBuffer[j, i] = Z;
-                                  B.SetPixel(j, i, C);
-                              } //  MyDrawLine(ref B,(int)curr1,i,(int)curr2,i,C);
-                          }
-                          curr1 -= dy1;
-                          curr2 -= dy2;
-                      }*/
-        }
-
-
-       
-
 
 
         private void SwapBitmaps(ref Bitmap b1, ref Bitmap b2)
@@ -423,24 +232,9 @@ namespace GK4
             if (pictureBox1.Height > 0 && pictureBox1.Width > 0)
             {
                 pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-                FillSceneBlack();
+                FillScene(Color.Black);
             }
             // button1_Click(null,null);
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            cam.Position[0] = (float) numericUpDown1.Value;
-        }
-
-        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
-        {
-            cam.Position[1] = (float) numericUpDown2.Value;
-        }
-
-        private void numericUpDown3_ValueChanged(object sender, EventArgs e)
-        {
-            cam.Position[2] = (float) numericUpDown3.Value;
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -453,11 +247,11 @@ namespace GK4
             if (saveFileDialog1.FileName != "")
             {
 
-                FileStream fs =(FileStream)saveFileDialog1.OpenFile();
+                FileStream fs = (FileStream)saveFileDialog1.OpenFile();
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Scene));
 
-                serializer.Serialize(fs,scene);
+                serializer.Serialize(fs, scene);
                 fs.Close();
             }
 
@@ -469,42 +263,45 @@ namespace GK4
             openFileDialog1.Filter = "XML files|*.xml";
             openFileDialog1.Title = "Wczytaj scenę";
 
-            if(openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 StreamReader sr = new StreamReader(openFileDialog1.FileName);
                 XmlSerializer seralzer = new XmlSerializer(typeof(Scene));
 
-                scene = seralzer.Deserialize(sr)as Scene;
-              
+                scene = seralzer.Deserialize(sr) as Scene;
+
                 sr.Close();
+                SetFromSaved();
             }
         }
+
+
 
         private void newSceneButton_Click(object sender, EventArgs e)
         {
             Bitmap B = pictureBox1.Image as Bitmap;
             Rendering r = new Rendering(ZBuffer);
-            r.RenderGouraud(scene,ref B);
+            r.RenderGouraud(scene, ref B);
             pictureBox1.Image = B;
         }
 
         private void ambientTrackBar_Scroll(object sender, EventArgs e)
         {
-            float val = ambientTrackBar.Value/100f;
+            float val = ambientTrackBar.Value / 100f;
             scene.Light.Ambient = val;
-            ambientLabel.Text = "Ambient:  " + String.Format("{0:0.00}",val);
+            ambientLabel.Text = "Ambient:  " + String.Format("{0:0.00}", val);
         }
 
         private void diffuseTrackBar_Scroll(object sender, EventArgs e)
         {
-            float val = diffuseTrackBar.Value/100f;
+            float val = diffuseTrackBar.Value / 100f;
             scene.Light.Diffuse = val;
             diffuseLabel.Text = "Diffuse:    " + String.Format("{0:0.00}", val);
         }
 
         private void specularTrackBar_Scroll(object sender, EventArgs e)
         {
-            float val = specularTrackBar.Value/100f;
+            float val = specularTrackBar.Value / 100f;
             scene.Light.Specular = val;
             specularLabel.Text = "Specular: " + String.Format("{0:0.00}", val);
         }
@@ -526,14 +323,77 @@ namespace GK4
 
         private void farNUD_ValueChanged(object sender, EventArgs e)
         {
-            scene.Far = (float) farNUD.Value;
+            scene.Far = (float)farNUD.Value;
         }
 
         private void nearNUD_ValueChanged(object sender, EventArgs e)
         {
-            scene.Near = (float) nearNUD.Value;
+            scene.Near = (float)nearNUD.Value;
         }
 
-       
+        private void backgroundColorButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = colorDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                scene.Background = colorDialog1.Color;
+                backgroundColorLabel.BackColor = colorDialog1.Color;
+            }
+        }
+
+        private void lightColorButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = colorDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                scene.Light.Colour = colorDialog1.Color;
+                lightColorLabel.BackColor = colorDialog1.Color;
+            }
+        }
+
+        private void targetXNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Camera.Target[0] = (float)targetXNUD.Value;
+        }
+
+        private void targetYNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Camera.Target[1] = (float)targetYNUD.Value;
+        }
+
+        private void targetZNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Camera.Target[2] = (float)targetZNUD.Value;
+        }
+
+        private void positionXNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Camera.Position[0] = (float)positionXNUD.Value;
+        }
+
+        private void positionYNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Camera.Position[1] = (float)positionYNUD.Value;
+        }
+
+        private void positionZNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Camera.Position[2] = (float)positionZNUD.Value;
+        }
+
+        private void lightXNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Light.Position[0] = (float)lightXNUD.Value;
+        }
+
+        private void lightYNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Light.Position[1] = (float)lightYNUD.Value;
+        }
+
+        private void lightZNUD_ValueChanged(object sender, EventArgs e)
+        {
+            scene.Light.Position[2] = (float)lightZNUD.Value;
+        }
     }
 }

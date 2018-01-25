@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace GK4
 {
@@ -16,6 +18,14 @@ namespace GK4
         public float Far { get; set; }
         public float FieldOfView { get; set; }
         public float Aspect { get; set; }
+        [XmlIgnore]
+        public Color Background { get; set; }
+        [XmlElement("Colour")]
+        public int BackgroundInt
+        {
+            get { return Background.ToArgb(); }
+            set { Background = Color.FromArgb(value); }
+        }
 
         public Scene()
         {
@@ -23,9 +33,10 @@ namespace GK4
             Far = 100f;
             FieldOfView = 45;
             Aspect = 1;
-            Camera= new Camera();
+            Camera = new Camera();
             Light = new Light();
             Figures = new List<Figure>();
+            Background = Color.Black;
         }
 
         public Matrix GetProjectionMatrix()
