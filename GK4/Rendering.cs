@@ -17,6 +17,78 @@ namespace GK4
             ZBuffer = zbuffer;
         }
 
+        public void RenderOutlines(Scene scene, ref Bitmap B)
+        {
+            Matrix View = scene.Camera.GetViewMatrix();
+            Matrix Proj = scene.GetProjectionMatrix();
+            Camera cam = scene.Camera;
+            Light light = scene.Light;
+
+            int W = B.Width;
+            int H = B.Height;
+
+            Matrix PV = Matrix.Multiply(Proj, View);
+
+            foreach (Figure figure in scene.Figures)
+            {
+                Color figureColor = figure.Colour;
+                Matrix Model = figure.GetModelMatrix();
+
+                foreach (Triangle T in figure.triangles)
+                {
+                    Vector v1, v2, v3;
+
+                    if (Model != null)
+                    {
+                        v1 = Matrix.Multiply(Model, T[0]);
+                        v2 = Matrix.Multiply(Model, T[1]);
+                        v3 = Matrix.Multiply(Model, T[2]);
+                    }
+                    else
+                    {
+                        v1 = T[0];
+                        v2 = T[1];
+                        v3 = T[2];
+                    }
+                    
+                    v1 = Matrix.Multiply(PV, v1);
+                    v2 = Matrix.Multiply(PV, v2);
+                    v3 = Matrix.Multiply(PV, v3);
+
+                    float v1x = v1[0] / v1[3];
+                    float v1y = v1[1] / v1[3];
+                    float v2x = v2[0] / v2[3];
+                    float v2y = v2[1] / v2[3];
+                    float v3x = v3[0] / v3[3];
+                    float v3y = v3[1] / v3[3];
+
+                    v1x = (v1x + 1) * W / 2;
+                    v1y = -(v1y - 1) * H / 2;
+                    v2x = (v2x + 1) * W / 2;
+                    v2y = -(v2y - 1) * H / 2;
+                    v3x = (v3x + 1) * W / 2;
+                    v3y = -(v3y - 1) * H / 2;
+
+                    DrawTriangle(ref B, v1x, v1y, v2x, v2y, v3x, v3y, figureColor);
+                }
+            }
+        }
+
+        private void DrawTriangle(ref Bitmap bitmap, float v1X, float v1Y, float v2X, float v2Y, float v3X, float v3Y, Color figureColor)
+        {
+            int v1x = (int)v1X;
+            int v1y = (int)v1Y;
+            int v2x = (int)v2X;
+            int v2y = (int)v2Y;
+            int v3x = (int)v3X;
+            int v3y = (int)v3Y;
+
+            MyDrawLine(ref bitmap, v1x, v1y, v2x, v2y, figureColor);
+            MyDrawLine(ref bitmap, v2x, v2y, v3x, v3y, figureColor);
+            MyDrawLine(ref bitmap, v3x, v3y, v1x, v1y, figureColor);
+
+        }
+
         public void RenderFlat(Scene scene, ref Bitmap B)
         {
             Matrix View = scene.Camera.GetViewMatrix();
@@ -636,7 +708,7 @@ namespace GK4
 
             return Color.FromArgb(R, G, B);
         }
-    
+
         public void MyDrawLine(ref Bitmap B, int _x1, int _y1, int _x2, int _y2, Color color)
         {
             // zmienne pomocnicze

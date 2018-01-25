@@ -126,8 +126,11 @@ namespace GK4
 
             triangles[Base_count * 3 - 1] = new Triangle(Top[0], Base[Base_count - 1], Base[0], n1, n2, n3);
             triangles[Base_count * 4 - 1] = new Triangle(Top[0], Top[Base_count - 1], Base[Base_count - 1], n4, n5, n6);
+        }
 
-
+        public override string ToString()
+        {
+            return "Cylinder";
         }
     }
 }

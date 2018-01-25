@@ -19,7 +19,7 @@ namespace GK4
 
         public Camera()
         {
-            Position = new Vector(0, 1f, 2f, 1);
+            Position = new Vector(0, 1f, 3f, 1);
             Target = new Vector(0, 0.5f, 0, 1);
             UpWorld = new Vector(0, 1, 0);
         }

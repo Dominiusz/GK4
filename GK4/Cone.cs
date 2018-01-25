@@ -96,5 +96,9 @@ namespace GK4
 
         }
 
+        public override string ToString()
+        {
+            return "Cone";
+        }
     }
 }

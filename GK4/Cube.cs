@@ -63,38 +63,11 @@ namespace GK4
 
             triangles[11] = new Triangle(0, 0, 1, 1, 1, 1, 0, 1, 1);
             triangles[11].normals = new Vector[] { new Vector(0, 1, 0, 0), new Vector(0, 1, 0, 0), new Vector(0, 1, 0, 0) };
+        }
 
-
-            /* Vector[] vertices = {
-                 new Vector (0, 0, 0,1),
-                 new Vector (1, 0, 0,1),
-                 new Vector (1, 1, 0,1),
-                 new Vector (0, 1, 0,1),
-                 new Vector (0, 1, 1,1),
-                 new Vector (1, 1, 1,1),
-                 new Vector (1, 0, 1,1),
-                 new Vector (0, 0, 1,1)
-             };
-
-
-
-             Triangle[] t = {
-               new Triangle(vertices[0], vertices[2], vertices[1]), //face front
-               new Triangle(vertices[0], vertices[3], vertices[2]),
-               new Triangle(vertices[2], vertices[3], vertices[4]), //face top
-               new Triangle(vertices[2], vertices[4], vertices[5]),
-               new Triangle(vertices[1], vertices[2], vertices[5]), //face right
-               new Triangle(vertices[1], vertices[5], vertices[6]),
-               new Triangle(vertices[0], vertices[7], vertices[4]), //face left
-               new Triangle(vertices[0], vertices[4], vertices[3]),
-               new Triangle(vertices[5], vertices[4], vertices[7]), //face back
-               new Triangle(vertices[5], vertices[7], vertices[6]),
-               new Triangle(vertices[0], vertices[6], vertices[7]), //face bottom
-               new Triangle(vertices[0], vertices[1], vertices[6])
-             }
-             ;
-             triangles = t;
-             */
+        public override string ToString()
+        {
+            return "Cube";
         }
     }
 }

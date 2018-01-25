@@ -22,6 +22,7 @@ namespace GK4
         private Scene scene;
         private Rendering rendering;
 
+
         private float[,] ZBuffer;
 
 
@@ -35,7 +36,22 @@ namespace GK4
             SetDefaultValues();
 
 
+            // Cube cube = new Cube();
+            // Cone cone = new Cone(16);
+            Cylinder cylinder = new Cylinder(20);
+            // scene.Figures.Add(cone);
+            // scene.Figures.Add(cube);
+
+            //  comboBox1.DataSource = scene.Figures;
+            scene.Figures.Add(cylinder);
+            comboBox1.DataSource = null;
+            comboBox1.DataSource = scene.Figures;
+
         }
+
+
+
+
 
         private void SetFromSaved()
         {
@@ -59,6 +75,8 @@ namespace GK4
 
             lightColorLabel.BackColor = scene.Light.Colour;
             backgroundColorLabel.BackColor = scene.Background;
+            comboBox1.DataSource = null;
+            comboBox1.DataSource = scene.Figures;
             RunEvents();
         }
 
@@ -105,7 +123,7 @@ namespace GK4
             positionYNUD.Increment = 0.1M;
             positionYNUD.Value = 1M;
             positionZNUD.Increment = 0.1M;
-            positionZNUD.Value = 2M;
+            positionZNUD.Value = 3M;
             lightXNUD.Increment = 0.1M;
             lightXNUD.Value = 1M;
             lightYNUD.Increment = 0.1M;
@@ -154,18 +172,26 @@ namespace GK4
             //  scene.Camera.Position = new Vector(0f, 2, 3, 1);
             //  scene.Camera.Target = new Vector(0, 0.5f, 0, 1);
             //  scene.Camera.UpWorld = new Vector(0, 1, 0);
-            Cube cube = new Cube();
-            Cone cone = new Cone(16);
-            Cylinder cylinder = new Cylinder(20);
+
             //scene.Light.Colour = Color.Crimson;
             // scene.Light.Position = new Vector(0, 1, 1, 1);
 
-            Rendering R = new Rendering(ZBuffer);
+            FillScene(scene.Background);
 
-    //        scene.Figures.Add(cone);
+            Rendering R = new Rendering(ZBuffer);
             Bitmap PBbtmap = pictureBox1.Image as Bitmap;
 
-            R.RenderGouraud(scene, ref PBbtmap);
+            if (noFillRB.Checked)
+                R.RenderOutlines(scene, ref PBbtmap);
+            else if (flatFillRB.Checked)
+            {
+                R.RenderFlat(scene, ref PBbtmap);
+            }
+            else
+            {
+                R.RenderGouraud(scene, ref PBbtmap);
+            }
+
             pictureBox1.Image = PBbtmap;
 
             //RenderGouraud(cone, cam,ref PBbtmap);
@@ -177,24 +203,6 @@ namespace GK4
 
 
 
-        private void button2_Click(object sender, EventArgs ea)
-        {
-            // FillSceneBlack();
-            // Random rnd = new Random();
-            // Triangle t = new Triangle(200, 250, 999, 100, 100, 999, 50, 450, 999);
-
-
-            Cube Tri = new Cube();
-            Tri.triangles = new Triangle[1];
-            Tri.triangles[0] =
-                new Triangle(new Vector(0, 0, 0, 1), new Vector(0.7f, 0, 0, 1), new Vector(0, 0.7f, 0, 1));
-            Tri.triangles[0].normals = new Vector[3];
-            Tri.triangles[0].normals[0] =
-                Tri.triangles[0].normals[1] = Tri.triangles[0].normals[2] = new Vector(0, 0, 1, 0);
-
-            //RenderGouraud(Tri,cam);
-
-        }
 
 
         private void SwapBitmaps(ref Bitmap b1, ref Bitmap b2)
@@ -203,29 +211,6 @@ namespace GK4
             b1 = b2;
             b2 = tmp;
         }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            Matrix A = new Matrix(3);
-            Matrix B = new Matrix(3);
-
-            for (int i = 0; i < 9; i++)
-            {
-                A[i / 3, i % 3] = i * 5;
-                B[i / 3, i % 3] = i * 3;
-            }
-
-            B[2, 2] = 373;
-
-            MessageBox.Show(Matrix.Multiply(A, B).ToString());
-            MessageBox.Show(Matrix.Multiply(B, A).ToString());
-
-
-        }
-
-
-
-
 
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
@@ -395,5 +380,33 @@ namespace GK4
         {
             scene.Light.Position[2] = (float)lightZNUD.Value;
         }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            AddWindow window = new AddWindow();
+            window.ShowDialog();
+            Figure result = window.Figure;
+            if (result == null)
+                return;
+            else
+            {
+                scene.Figures.Add(result);
+                comboBox1.DataSource = null;
+                comboBox1.DataSource = scene.Figures;
+            }
+
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex != -1)
+                scene.Figures.RemoveAt(comboBox1.SelectedIndex);
+            comboBox1.DataSource = null;
+            comboBox1.DataSource = scene.Figures;
+            if (comboBox1.Items.Count != 0)
+                comboBox1.SelectedIndex = 0;
+        }
+
+       
     }
 }
