@@ -27,31 +27,14 @@ namespace GK4
             ;
         }
 
-        public Vector(List<float> list, bool _IsVertical = true)
-        {
-            table = list.ToArray();
-            IsVertical = _IsVertical;
-        }
-
+ 
         public Vector(params float[] tab)
         {
             table = new float[tab.Length];
             tab.CopyTo(table, 0);
             IsVertical = true;
         }
-
-        public Vector(IEnumerable<float> set, bool _IsVertical = true)
-        {
-            List<float> tmp = new List<float>();
-            foreach (var number in set)
-            {
-                tmp.Add(number);
-            }
-
-            table = tmp.ToArray();
-            IsVertical = _IsVertical;
-        }
-
+      
         public Vector(int rank, bool _ISVertical = true)
         {
             if (rank <= 0)
