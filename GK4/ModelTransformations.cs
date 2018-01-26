@@ -10,7 +10,6 @@ namespace GK4
     public class ModelTransformations
     {
         private const float pi = (float) Math.PI;
-
         public static Matrix GetTranslationMatrix(float x, float y, float z)
         {
             Matrix ret = Matrix.GetIdentityMatrix(4);
@@ -56,7 +55,6 @@ namespace GK4
             ret[2, 0] = -sin;
             return ret;
         }
-
         public static Matrix GetZTurnMatrix(float angle)
         {
             Matrix ret = Matrix.GetIdentityMatrix(4);

@@ -15,7 +15,6 @@ namespace GK4
         {
             ;
         }
-
         public Cylinder(int pieces)
         {
             if (pieces < 4)
@@ -34,7 +33,6 @@ namespace GK4
             Zturn = 0;
 
             double Pi = Math.PI;
-
             pieces /= 4;
 
             Vector center = new Vector(0, 0, 0, 1);

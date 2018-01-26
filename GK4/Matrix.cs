@@ -175,31 +175,6 @@ namespace GK4
             return ret;
         }
 
-        public Vector ToVector()
-        {
-            if (Rows != 1 && Columns != 1)
-                throw new ArgumentException();
-
-            if (Rows == 1)
-            {
-                float[] tmp = new float[Columns];
-                for (int i = 0; i < Columns; i++)
-                {
-                    tmp[i] = array[0, i];
-                }
-                return new Vector(tmp, false);
-            }
-            else
-            {
-                float[] tmp = new float[Rows];
-                for (int i = 0; i < Rows; i++)
-                {
-                    tmp[i] = array[i, 0];
-                }
-                return new Vector(tmp);
-            }
-        }
-
         public Matrix Transpose()
         {
             float[,] new_array = new float[Columns, Rows];
@@ -213,13 +188,6 @@ namespace GK4
             }
             array = new_array;
             return this;
-        }
-
-        public float ToNumber()
-        {
-            if (Rows != 1 || Columns != 1)
-                throw new ArgumentException();
-            return array[0, 0];
         }
     }
 }

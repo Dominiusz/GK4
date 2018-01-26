@@ -26,7 +26,6 @@ namespace GK4
             get { return Background.ToArgb(); }
             set { Background = Color.FromArgb(value); }
         }
-
         public Scene()
         {
             Near = 1f;
@@ -38,7 +37,6 @@ namespace GK4
             Figures = new List<Figure>();
             Background = Color.Black;
         }
-
         public Matrix GetProjectionMatrix()
         {
             float e = 1 / (float)Math.Tan(FieldOfView * Math.PI / 180 / 2);
@@ -51,8 +49,6 @@ namespace GK4
             Proj[2, 3] = (-2 * Far * Near) / (Far - Near);
 
             return Proj;
-
         }
-
     }
 }

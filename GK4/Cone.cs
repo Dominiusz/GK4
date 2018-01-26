@@ -93,7 +93,6 @@ namespace GK4
             nUp.Normalize();
 
             triangles[8 * pieces - 1] = new Triangle(top, Base[0], Base[Base.Count - 1], nUp, n1, n2);
-
         }
 
         public override string ToString()

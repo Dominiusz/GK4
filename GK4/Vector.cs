@@ -27,7 +27,6 @@ namespace GK4
             ;
         }
 
- 
         public Vector(params float[] tab)
         {
             table = new float[tab.Length];
@@ -163,13 +162,6 @@ namespace GK4
                 ret.table[i] = v.table[i] / n;
             }
             return ret;
-        }
-
-        public float ToNumber()
-        {
-            if (Rank != 1)
-                throw new ArgumentException();
-            return table[0];
         }
 
         public Vector Get3Vector()

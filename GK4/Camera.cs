@@ -12,7 +12,6 @@ namespace GK4
         public Vector Position { get; set; }
         public Vector Target { get; set; }
         public Vector UpWorld { get; set; }
-
         public Vector D => Position - Target;
         public Vector R => Vector.CrossProduct(D, UpWorld);
         public Vector U => Vector.CrossProduct(D, R);
@@ -38,7 +37,6 @@ namespace GK4
             Vector Un = U.GetNormalizedVector();
 
             Matrix a = new Matrix(4);
-
             for (int i = 0; i < 3; i++)
             {
                 a[0, i] = Rn[i];

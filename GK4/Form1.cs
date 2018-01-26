@@ -22,6 +22,7 @@ namespace GK4
         private Scene scene;
         private Rendering rendering;
         private Figure selectedFigure;
+        float FPS;
 
 
         private float[,] ZBuffer;
@@ -179,6 +180,7 @@ namespace GK4
 
         private void Repaint()
         {
+            var begin = DateTime.Now.Millisecond;
             FillScene(scene.Background);
             Bitmap PBbtmap = pictureBox1.Image as Bitmap;
 
@@ -192,6 +194,8 @@ namespace GK4
             {
                 rendering.RenderGouraud(scene, ref PBbtmap);
             }
+            FPS = 1000f / (DateTime.Now.Millisecond - begin);
+            FPSlabel.Text = "FPS: " + FPS;
 
             pictureBox1.Image = PBbtmap;
         }
@@ -199,11 +203,17 @@ namespace GK4
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
             if (pictureBox1.Height > 0 && pictureBox1.Width > 0)
-            {
+            {        
                 pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+                scene.Aspect = (float)pictureBox1.Width / pictureBox1.Height;
+                aspectNUD.Value = (decimal)scene.Aspect;
                 if (scene != null)
+                {
                     FillScene(scene.Background);
+                    Repaint();
+                }
             }
+
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -511,5 +521,6 @@ namespace GK4
         {
             Repaint();
         }
+
     }
 }

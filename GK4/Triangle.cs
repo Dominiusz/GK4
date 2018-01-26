@@ -11,7 +11,6 @@ namespace GK4
     {
         public Vector[] normals;
         public Vector[] coordinates;
-
         public Triangle()
         {
             ;
@@ -57,11 +56,6 @@ namespace GK4
             normals[2] = new Vector(n3);
         }
 
-
         public Vector this[int ind] { get { return coordinates[ind]; } set { coordinates[ind] = value; } }
-
-
-
-
     }
 }

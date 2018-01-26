@@ -10,8 +10,6 @@ namespace GK4
     [Serializable]
     public class Cube : Figure
     {
-        //public Triangle[] triangles;
-
         public Cube()
         {
             Xtranslation = 0;
@@ -64,7 +62,6 @@ namespace GK4
             triangles[11] = new Triangle(0, 0, 1, 1, 1, 1, 0, 1, 1);
             triangles[11].normals = new Vector[] { new Vector(0, 1, 0, 0), new Vector(0, 1, 0, 0), new Vector(0, 1, 0, 0) };
         }
-
         public override string ToString()
         {
             return "Cube";

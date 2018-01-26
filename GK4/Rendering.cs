@@ -16,7 +16,6 @@ namespace GK4
         {
             ZBuffer = zbuffer;
         }
-
         public void RenderOutlines(Scene scene, ref Bitmap B)
         {
             Matrix View = scene.Camera.GetViewMatrix();
@@ -86,7 +85,6 @@ namespace GK4
             MyDrawLine(ref bitmap, v1x, v1y, v2x, v2y, figureColor);
             MyDrawLine(ref bitmap, v2x, v2y, v3x, v3y, figureColor);
             MyDrawLine(ref bitmap, v3x, v3y, v1x, v1y, figureColor);
-
         }
 
         public void RenderFlat(Scene scene, ref Bitmap B)
@@ -174,8 +172,6 @@ namespace GK4
                         (col1.B + col2.B + col3.B) / 3);
 
                     FillTriangleFlat(ref B, new Vector(v1x, v1y, v1z), new Vector(v2x, v2y, v2z), new Vector(v3x, v3y, v3z), triangleColor);
-
-
                 }
             }
         }
@@ -211,7 +207,7 @@ namespace GK4
 
             int x4 = (int)(x1f + (y2f - y1f) / (y3f - y1f) * (x3f - x1f));
             int y4 = (int)y2f;
-            float q = CalculateDistance2D(x1, y1, x4, y4) / CalculateDistance2D(x1, y1, x3, y3);
+            float q = CalculateDistance2D(x1f, y1f, x4, y4) / CalculateDistance2D(x1f, y1f, x3f, y3f);
             float z4f = z1f * (1 - q) + z3f * q;
 
             if (y2 == y3)
@@ -228,7 +224,6 @@ namespace GK4
                 FillBottomFlatTriangleFlat(ref b, triangleColor, x1, y1, z1f, x2, y2, z2f, x4, y4, z4f);
                 FillTopFlatTriangleFlat(ref b, triangleColor, x2, y2, z2f, x4, y4, z4f, x3, y3, z3f);
             }
-
         }
 
         private void FillTopFlatTriangleFlat(ref Bitmap b, Color triangleColor, int x1, int y1, float z1f, int x2, int y2, float z2f, int x3, int y3, float z3f)
@@ -261,7 +256,7 @@ namespace GK4
 
             for (int i = y3; i > y1; i--)
             {
-                float q = CalculateDistance2D(curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
+                float q = CalculateDistance2D(curr1, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
                 currZ1 = z3f * (1 - q) + z1f * q;
                 q = CalculateDistance2D(curr2, i, x3, y3) / CalculateDistance2D(x2, y2, x3, y3);
                 currZ2 = z3f * (1 - q) + z2f * q;
@@ -306,8 +301,8 @@ namespace GK4
             double curr1 = x1;
             double curr2 = x1;
 
-            float currZ1; //= z1f;
-            float currZ2; //= z2f;
+            float currZ1; 
+            float currZ2; 
             float Z;
 
             int width = b.Width;
@@ -317,7 +312,7 @@ namespace GK4
             {
                 float q = CalculateDistance2D(curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x2, y2);
                 currZ1 = z1f * (1 - q) + z2f * q;
-                q = CalculateDistance2D(curr2, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
+                q = CalculateDistance2D(curr2, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
                 currZ2 = z1f * (1 - q) + z3f * q;
 
                 for (int j = (int)curr1; j <= (int)curr2; j++)
@@ -341,7 +336,6 @@ namespace GK4
 
         public void RenderGouraud(Scene scene, ref Bitmap B)
         {
-
             Matrix View = scene.Camera.GetViewMatrix();
             Matrix Proj = scene.GetProjectionMatrix();
             Camera cam = scene.Camera;
@@ -466,7 +460,7 @@ namespace GK4
 
             int x4 = (int)(x1f + (y2f - y1f) / (y3f - y1f) * (x3f - x1f));
             int y4 = (int)y2f;
-            float q = CalculateDistance2D(x1, y1, x4, y4) / CalculateDistance2D(x1, y1, x3, y3);
+            float q = CalculateDistance2D(x1f, y1f, x4, y4) / CalculateDistance2D(x1f, y1f, x3f, y3f);
             float z4f = z1f * (1 - q) + z3f * q;
             float wc4 = wc1 * (1 - q) + wc3 * q;
             Color c4 = InterpolateColor(c1, c3, wc1, wc3, q);
@@ -536,7 +530,7 @@ namespace GK4
                 currWC1 = wc1 * (1 - q) + wc2 * q;
                 C1 = InterpolateColor(col1, col2, wc1, wc2, q);
 
-                q = CalculateDistance2D((int)curr2, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
+                q = CalculateDistance2D((int)curr2, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
                 currZ2 = z1f * (1 - q) + z3f * q;
                 currWC2 = wc1 * (1 - q) + wc3 * q;
                 C2 = InterpolateColor(col1, col3, wc1, wc3, q);
@@ -545,10 +539,7 @@ namespace GK4
                 {
                     if (j < -1000)
                     {
-                        //if (Math.Abs(curr1) > 3000)
-                        //    return;
                         break;
-
                     }
                     q = CalculateDistance2D(j, i, (int)curr1, i) / CalculateDistance2D((int)curr1, i, (int)curr2, i);
                     Z = currZ1 * (1 - q) + currZ2 * q;
@@ -559,7 +550,7 @@ namespace GK4
                     {
                         ZBuffer[j, i] = Z;
                         b.SetPixel(j, i, C);
-                    } //MyDrawLine(ref B, (int)curr1, i, (int)curr2, i, C);
+                    } 
                 }
                 curr1 += dy1;
                 curr2 += dy2;
@@ -608,7 +599,7 @@ namespace GK4
 
             for (int i = y3; i > y1; i--)
             {
-                float q = CalculateDistance2D((int)curr1, i, x1, y1) / CalculateDistance2D(x1, y1, x3, y3);
+                float q = CalculateDistance2D((int)curr1, i, x3, y3) / CalculateDistance2D(x1, y1, x3, y3);
                 currZ1 = z3f * (1 - q) + z1f * q;
                 currWC1 = wc3 * (1 - q) + wc1 * q;
                 C1 = InterpolateColor(col3, col1, wc3, wc1, q);
@@ -626,15 +617,13 @@ namespace GK4
 
                     if (j < -1000)
                     {
-                        //   if (Math.Abs(curr1) > 3000)
-                        //       return;
                         break;
                     }
                     if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
                     {
                         ZBuffer[j, i] = Z;
                         b.SetPixel(j, i, C);
-                    } //  MyDrawLine(ref B,(int)curr1,i,(int)curr2,i,C);
+                    } 
                 }
                 curr1 -= dy1;
                 curr2 -= dy2;

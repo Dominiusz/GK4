@@ -33,7 +33,6 @@ namespace GK4
             set { Colour = Color.FromArgb(value); }
         }
 
-
         public Matrix GetModelMatrix()
         {
             Matrix ret = null;
