@@ -11,6 +11,7 @@ namespace GK4
     class Rendering
     {
         public float[,] ZBuffer;
+        public bool ZBufferEnabled = true;
 
         public Rendering(ref float[,] zbuffer)
         {
@@ -49,7 +50,7 @@ namespace GK4
                         v2 = T[1];
                         v3 = T[2];
                     }
-                    
+
                     v1 = Matrix.Multiply(PV, v1);
                     v2 = Matrix.Multiply(PV, v2);
                     v3 = Matrix.Multiply(PV, v3);
@@ -263,16 +264,27 @@ namespace GK4
 
                 for (int j = (int)curr1; j <= (int)curr2; j++)
                 {
-                    q = CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
-                    Z = currZ1 * (1 - q) + currZ2 * q;
                     if (j < -1000)
                     {
                         break;
                     }
-                    if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                    if (ZBufferEnabled)
                     {
-                        ZBuffer[j, i] = Z;
-                        b.SetPixel(j, i, triangleColor);
+                        q = CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
+                        Z = currZ1 * (1 - q) + currZ2 * q;
+
+                        if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                        {
+                            ZBuffer[j, i] = Z;
+                            b.SetPixel(j, i, triangleColor);
+                        }
+                    }
+                    else
+                    {
+                        if (j > -1 && i > -1 && j < width && i < height)
+                        {
+                            b.SetPixel(j, i, triangleColor);
+                        }
                     }
                 }
                 curr1 -= dy1;
@@ -301,8 +313,8 @@ namespace GK4
             double curr1 = x1;
             double curr2 = x1;
 
-            float currZ1; 
-            float currZ2; 
+            float currZ1;
+            float currZ2;
             float Z;
 
             int width = b.Width;
@@ -321,12 +333,22 @@ namespace GK4
                     {
                         break;
                     }
-                    q = CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
-                    Z = currZ1 * (1 - q) + currZ2 * q;
-                    if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                    if (ZBufferEnabled)
                     {
-                        ZBuffer[j, i] = Z;
-                        b.SetPixel(j, i, triangleColor);
+                        q = CalculateDistance2D(j, i, curr1, i) / CalculateDistance2D(curr1, i, curr2, i);
+                        Z = currZ1 * (1 - q) + currZ2 * q;
+                        if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                        {
+                            ZBuffer[j, i] = Z;
+                            b.SetPixel(j, i, triangleColor);
+                        }
+                    }
+                    else
+                    {
+                        if (j > -1 && i > -1 && j < width && i < height)
+                        {
+                            b.SetPixel(j, i, triangleColor);
+                        }
                     }
                 }
                 curr1 += dy1;
@@ -545,12 +567,21 @@ namespace GK4
                     Z = currZ1 * (1 - q) + currZ2 * q;
 
                     C = InterpolateColor(C1, C2, currWC1, currWC2, q);
-
-                    if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                    if (ZBufferEnabled)
                     {
-                        ZBuffer[j, i] = Z;
-                        b.SetPixel(j, i, C);
-                    } 
+                        if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                        {
+                            ZBuffer[j, i] = Z;
+                            b.SetPixel(j, i, C);
+                        }
+                    }
+                    else
+                    {
+                        if (j > -1 && i > -1 && j < width && i < height)
+                        {
+                            b.SetPixel(j, i, C);
+                        }
+                    }
                 }
                 curr1 += dy1;
                 curr2 += dy2;
@@ -619,11 +650,22 @@ namespace GK4
                     {
                         break;
                     }
-                    if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                    if(ZBufferEnabled)
                     {
-                        ZBuffer[j, i] = Z;
-                        b.SetPixel(j, i, C);
-                    } 
+                        if (j > -1 && i > -1 && j < width && i < height && Z > ZBuffer[j, i])
+                        {
+                            ZBuffer[j, i] = Z;
+                            b.SetPixel(j, i, C);
+                        }
+                    }
+                    else
+                    {
+                        if (j > -1 && i > -1 && j < width && i < height)
+                        {
+                            b.SetPixel(j, i, C);
+                        }
+                    }
+
                 }
                 curr1 -= dy1;
                 curr2 -= dy2;

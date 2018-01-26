@@ -182,8 +182,6 @@ namespace GK4
 
         private void Repaint()
         {
-            //System.Diagnostics.Stopwatch begin = System.Diagnostics.Stopwatch.StartNew();
-            //var begin = DateTime.Now.Millisecond;
             timer.Restart();
             FillScene(scene.Background);
             Bitmap PBbtmap = pictureBox1.Image as Bitmap;
@@ -199,7 +197,7 @@ namespace GK4
                 rendering.RenderGouraud(scene, ref PBbtmap);
             }      
             FPS = 1000f / (timer.ElapsedMilliseconds);
-            FPSlabel.Text = "FPS: " + FPS;
+            FPSlabel.Text = "FPS: " + String.Format("{0:0.00}", FPS);
 
             pictureBox1.Image = PBbtmap;
         }
@@ -208,13 +206,13 @@ namespace GK4
         {
             if (pictureBox1.Height > 0 && pictureBox1.Width > 0)
             {
-                pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-                scene.Aspect = (float)pictureBox1.Width / pictureBox1.Height;
-                aspectNUD.Value = (decimal)scene.Aspect;
+                pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);                              
                 if (scene != null)
                 {
                     FillScene(scene.Background);
                     Repaint();
+                    scene.Aspect = (float)pictureBox1.Width / pictureBox1.Height;
+                    aspectNUD.Value = (decimal)scene.Aspect;
                 }
             }
 
@@ -526,5 +524,13 @@ namespace GK4
             Repaint();
         }
 
+        private void Zbuffercheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Zbuffercheckbox.Checked)
+                rendering.ZBufferEnabled = false;
+            else
+                rendering.ZBufferEnabled = true;
+            Repaint();
+        }
     }
 }
