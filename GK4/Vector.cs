@@ -81,8 +81,8 @@ namespace GK4
 
         public Vector Normalize()
         {
-           // if (Length < 0.0000001)
-           //     throw new ArgumentException();
+            if (Length < 0.0000001)
+                throw new ArgumentException();
             float length = Length;
             for (int i = 0; i < Rank; i++)
             {
