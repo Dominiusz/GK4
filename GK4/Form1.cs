@@ -22,6 +22,7 @@ namespace GK4
         private Scene scene;
         private Rendering rendering;
         private Figure selectedFigure;
+        private System.Diagnostics.Stopwatch timer;
         float FPS;
 
 
@@ -31,6 +32,7 @@ namespace GK4
         public Form1()
         {
             InitializeComponent();
+            timer = System.Diagnostics.Stopwatch.StartNew();
             FillScene(Color.Black);
             scene = new Scene();
             rendering = new Rendering(ref ZBuffer);
@@ -180,7 +182,9 @@ namespace GK4
 
         private void Repaint()
         {
-            var begin = DateTime.Now.Millisecond;
+            //System.Diagnostics.Stopwatch begin = System.Diagnostics.Stopwatch.StartNew();
+            //var begin = DateTime.Now.Millisecond;
+            timer.Restart();
             FillScene(scene.Background);
             Bitmap PBbtmap = pictureBox1.Image as Bitmap;
 
@@ -193,8 +197,8 @@ namespace GK4
             else
             {
                 rendering.RenderGouraud(scene, ref PBbtmap);
-            }
-            FPS = 1000f / (DateTime.Now.Millisecond - begin);
+            }      
+            FPS = 1000f / (timer.ElapsedMilliseconds);
             FPSlabel.Text = "FPS: " + FPS;
 
             pictureBox1.Image = PBbtmap;
@@ -203,7 +207,7 @@ namespace GK4
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
             if (pictureBox1.Height > 0 && pictureBox1.Width > 0)
-            {        
+            {
                 pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
                 scene.Aspect = (float)pictureBox1.Width / pictureBox1.Height;
                 aspectNUD.Value = (decimal)scene.Aspect;
